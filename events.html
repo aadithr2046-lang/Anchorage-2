@@ -326,9 +326,11 @@
             z-index: 0; opacity: 0; pointer-events: none;
         }
 
-        /* Side slides show only the poster portion (clip the info block) */
+        /* Side slides: clip to poster only so they appear uniform height */
         .c-slide:not([data-pos="0"]) .slide-info-block,
-        .c-slide:not([data-pos="0"]) .slide-actions { display: none !important; }
+        .c-slide:not([data-pos="0"]) .slide-actions {
+            display: none !important;
+        }
 
         /* Arrow buttons */
         .carousel-arrow {
@@ -600,15 +602,15 @@
             .day-selector-inner { padding: 0 20px; overflow-x: auto; scrollbar-width: none; }
             .day-selector-inner::-webkit-scrollbar { display: none; }
             .days-container { padding: 0 20px 80px; }
-            .carousel-stage { height: 420px; }
-            .c-slide { width: 180px; height: 320px; }
+            .carousel-stage { height: 520px; }
+            .c-slide { width: 180px; height: auto; }
             .c-slide[data-pos="2"], .c-slide[data-pos="-2"] { opacity: 0; pointer-events: none; }
             .page-hero { padding: 110px 20px 40px; }
         }
         @media (max-width: 600px) {
             .events-grid { grid-template-columns: 1fr; }
-            .carousel-stage { height: 380px; }
-            .c-slide { width: 160px; height: 284px; }
+            .carousel-stage { height: 520px; }
+            .c-slide { width: 160px; height: auto; }
             .c-slide[data-pos="1"], .c-slide[data-pos="-1"] {
                 transform: translate(calc(-50% + 180px), -50%) translateZ(-80px) scale(0.82) rotateY(-14deg);
             }
@@ -1111,13 +1113,13 @@ function renderCard(ev) {
 
 function renderGrid(day) {
     const filter = activeFilter[day];
-    const events = EVENTS.filter(e => e.day === day && (filter === 'all' || e.type === filter));
+    const events = EVENTS.filter(e => e.day === Number(day) && (filter === 'all' || e.type === filter));
     const grid = document.getElementById('grid-' + day);
     if (!grid) return;
     grid.innerHTML = events.length
         ? events.map(renderCard).join('')
         : `<div class="empty-state">// NO EVENTS MATCH FILTER //</div>`;
-    document.getElementById('count-' + day).textContent = EVENTS.filter(e => e.day === day).length + ' EVENTS';
+    document.getElementById('count-' + day).textContent = EVENTS.filter(e => e.day === Number(day)).length + ' EVENTS';
 }
 
 // ════════════════════════════════════════════════════════════
@@ -1206,6 +1208,18 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('next-' + d).addEventListener('click', () => carouselStep(d, 1));
     });
     initTypeFilters();
+
+    // Touch swipe support for carousel on mobile
+    [1,2,3].forEach(d => {
+        const stage = document.getElementById('stage-' + d);
+        if (!stage) return;
+        let touchStartX = 0;
+        stage.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+        stage.addEventListener('touchend', e => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 40) carouselStep(d, diff > 0 ? 1 : -1);
+        }, { passive: true });
+    });
 
     document.getElementById('modalClose').addEventListener('click', closeModal);
     document.getElementById('event-modal').addEventListener('click', function(e) {
