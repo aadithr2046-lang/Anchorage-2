@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events | Anchorage 2026</title>
+    <style>
+        /* ═══════════════════════════════════════════════════════
+           ANCHORAGE 2026 — EVENTS PAGE — CSS REBUILT FROM SCRATCH
+           Mobile-first, full-width grids, stunning 9:16 cards
+        ═══════════════════════════════════════════════════════ */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --cyan: #00f2ff;
+            --cyan-dim: rgba(0,242,255,0.5);
+            --cyan-glass: rgba(0,242,255,0.07);
+            --ocean: #00050a;
+            --ocean-mid: #000d15;
+            --ocean-card: #00111e;
+            --border: rgba(0,242,255,0.15);
+            --border-bright: rgba(0,242,255,0.4);
+            --gold: #ffd166;
+            --coral: #ff6b6b;
+            --green: #06d6a0;
+            --purple: #b56bff;
+            --expo: cubic-bezier(0.19,1,0.22,1);
+            --nav-h: 60px;
+            --daybar-h: 56px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--ocean);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ══════════════ BACKGROUND ══════════════ */
+        #bg {
+            position: fixed; inset: 0; z-index: -1; overflow: hidden;
+            background: radial-gradient(ellipse 140% 60% at 50% -10%, rgba(0,70,100,0.3) 0%, var(--ocean) 65%);
+        }
+        .grid-bg {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(0,242,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,242,255,0.025) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        .radar {
+            position: absolute; top: 50%; left: 50%;
+            width: 130vw; height: 130vw; border-radius: 50%;
+            border: 1px solid rgba(0,242,255,0.04);
+            transform: translate(-50%,-50%) scale(0);
+            animation: rping 12s infinite linear;
+        }
+        @keyframes rping { to { transform: translate(-50%,-50%) scale(1.5); opacity: 0; } }
+
+        /* ══════════════ NAV ══════════════ */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: var(--nav-h); z-index: 999;
+            background: rgba(0,5,10,0.95); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px;
+        }
+        .nav-brand {
+            font-family: 'Orbitron'; font-size: 0.72rem;
+            letter-spacing: 4px; color: var(--cyan); text-decoration: none;
+            text-shadow: 0 0 16px rgba(0,242,255,0.4);
+        }
+        .nav-links { display: flex; gap: 24px; }
+        .nav-links a {
+            font-family: 'Orbitron'; font-size: 0.58rem; letter-spacing: 3px;
+            text-decoration: none; color: rgba(255,255,255,0.45);
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--cyan); text-shadow: 0 0 8px var(--cyan);
+        }
+        .nav-reg {
+            font-family: 'Orbitron'; font-size: 0.58rem; letter-spacing: 3px;
+            text-decoration: none; color: var(--cyan);
+            border: 1px solid var(--cyan); padding: 7px 16px;
+            clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+            transition: background 0.3s, color 0.3s;
+        }
+        .nav-reg:hover { background: var(--cyan); color: var(--ocean); }
+
+        /* ══════════════ HERO ══════════════ */
+        .page-hero {
+            padding: calc(var(--nav-h) + 48px) 20px 40px;
+            text-align: center;
+        }
+        .page-hero-tag {
+            font-family: 'Share Tech Mono'; font-size: 0.65rem;
+            letter-spacing: 5px; color: var(--cyan); opacity: 0.65;
+            margin-bottom: 14px; display: block;
+        }
+        .page-hero h1 {
+            font-family: 'Orbitron'; font-size: clamp(2.2rem, 8vw, 5rem);
+            font-weight: 900; letter-spacing: 6px;
+            background: linear-gradient(135deg, #fff 30%, var(--cyan) 75%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-hero p {
+            margin-top: 14px; font-size: 1rem; color: rgba(255,255,255,0.45);
+            letter-spacing: 1px; max-width: 540px; margin-inline: auto;
+            line-height: 1.6;
+        }
+
+        /* ══════════════ STICKY DAY SELECTOR ══════════════ */
+        .day-selector-bar {
+            position: sticky; top: var(--nav-h); z-index: 800;
+            background: rgba(0,5,10,0.98); backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+            height: var(--daybar-h);
+        }
+        .day-selector-inner {
+            max-width: 1300px; margin: 0 auto; height: 100%;
+            display: flex; align-items: stretch;
+            padding: 0 16px;
+            overflow-x: auto; scrollbar-width: none;
+        }
+        .day-selector-inner::-webkit-scrollbar { display: none; }
+
+        .day-btn {
+            font-family: 'Orbitron'; font-size: 0.6rem; letter-spacing: 2.5px;
+            padding: 0 20px; border: none; background: none;
+            color: rgba(255,255,255,0.32); cursor: pointer;
+            position: relative; white-space: nowrap;
+            transition: color 0.3s; flex-shrink: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 3px;
+        }
+        .day-btn::after {
+            content: ''; position: absolute; bottom: 0; left: 50%;
+            width: 0; height: 2px; background: var(--cyan);
+            transform: translateX(-50%);
+            transition: width 0.4s var(--expo);
+            box-shadow: 0 0 10px var(--cyan);
+        }
+        .day-btn.active { color: var(--cyan); }
+        .day-btn.active::after { width: 70%; }
+        .day-btn:hover { color: rgba(255,255,255,0.65); }
+        .day-date-sub {
+            font-family: 'Share Tech Mono'; font-size: 0.42rem;
+            letter-spacing: 1.5px; color: rgba(0,242,255,0.45);
+        }
+
+        /* ══════════════ DAYS CONTAINER ══════════════ */
+        .days-container {
+            max-width: 1300px; margin: 0 auto;
+            padding: 0 16px 80px;
+        }
+
+        @media (min-width: 600px) {
+            .days-container { padding: 0 24px 100px; }
+        }
+        @media (min-width: 1024px) {
+            .days-container { padding: 0 40px 100px; }
+            nav { padding: 0 40px; }
+            .day-selector-inner { padding: 0 40px; }
+            .day-btn { padding: 0 32px; font-size: 0.65rem; }
+        }
+
+        .day-section { margin-top: 48px; padding-top: 16px; }
+
+        /* Day header */
+        .day-section-header {
+            display: flex; align-items: center; gap: 14px;
+            margin-bottom: 32px; padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+        .day-num-badge {
+            font-family: 'Orbitron'; font-size: 0.52rem; letter-spacing: 3px;
+            border: 1px solid var(--cyan); padding: 8px 14px;
+            color: var(--cyan); background: rgba(0,242,255,0.05);
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .day-section-title-wrap { flex: 1; min-width: 0; }
+        .day-section-title {
+            font-family: 'Orbitron'; font-size: clamp(1.3rem, 4vw, 2.2rem);
+            font-weight: 700; letter-spacing: 4px;
+            background: linear-gradient(135deg, #fff 40%, var(--cyan) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .day-section-date {
+            font-family: 'Share Tech Mono'; color: var(--cyan);
+            font-size: 0.68rem; letter-spacing: 2px; margin-top: 4px; opacity: 0.6;
+        }
+        .day-section-count {
+            font-family: 'Share Tech Mono'; font-size: 0.55rem;
+            letter-spacing: 2px; color: rgba(255,255,255,0.28);
+            white-space: nowrap;
+        }
+
+        /* ══════════════ 3D CAROUSEL ══════════════ */
+        .carousel-wrap { position: relative; margin-bottom: 48px; }
+        .carousel-label {
+            font-family: 'Share Tech Mono'; font-size: 0.55rem;
+            letter-spacing: 4px; color: var(--cyan); opacity: 0.5;
+            margin-bottom: 16px; display: block;
+        }
+        .carousel-stage {
+            position: relative; height: 480px;
+            perspective: 1200px;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Carousel slides — 9:16 poster */
+        .c-slide {
+            position: absolute; top: 50%; left: 50%;
+            width: 180px; height: auto;
+            transform-origin: center center;
+            transform: translate(-50%, -50%);
+            transition: all 0.65s cubic-bezier(0.23,1,0.32,1);
+            cursor: pointer; overflow: visible;
+        }
+        .c-slide .slide-inner {
+            width: 100%; position: relative;
+            border: 1px solid var(--border); background: var(--ocean-mid);
+            overflow: hidden; display: flex; flex-direction: column;
+        }
+        .c-slide .slide-poster-wrap {
+            width: 100%; aspect-ratio: 9/16;
+            position: relative; overflow: hidden; flex-shrink: 0;
+        }
+        .c-slide img.slide-poster { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .c-slide .slide-placeholder {
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 10px;
+            background: linear-gradient(160deg, #001a2c 0%, #000d15 60%, #001520 100%);
+            position: relative;
+        }
+        .c-slide .slide-placeholder::before {
+            content: ''; position: absolute; inset: 0;
+            background: repeating-linear-gradient(45deg, transparent, transparent 20px,
+                rgba(0,242,255,0.012) 20px, rgba(0,242,255,0.012) 21px);
+        }
+        .slide-ph-icon { font-size: 2.5rem; position: relative; z-index: 1; filter: drop-shadow(0 0 14px var(--cyan)); }
+        .slide-ph-name {
+            font-family: 'Orbitron'; font-size: 0.5rem; letter-spacing: 2px;
+            color: var(--cyan); text-align: center; padding: 0 10px;
+            position: relative; z-index: 1;
+        }
+        .slide-type-tag {
+            position: absolute; top: 8px; left: 8px; z-index: 2;
+            font-family: 'Orbitron'; font-size: 0.38rem; letter-spacing: 2px;
+            padding: 3px 7px; background: rgba(0,5,10,0.88);
+            border: 1px solid var(--border); color: var(--cyan);
+        }
+        .slide-info-block {
+            width: 100%; padding: 10px 11px 6px;
+            background: var(--ocean-mid); border-top: 1px solid var(--border);
+            display: none;
+        }
+        .c-slide[data-pos="0"] .slide-info-block { display: block; }
+        .slide-info-name {
+            font-family: 'Orbitron'; font-size: 0.54rem; letter-spacing: 1.5px;
+            color: #fff; margin-bottom: 3px; line-height: 1.3;
+        }
+        .slide-info-fee { font-family: 'Share Tech Mono'; font-size: 0.48rem; margin-bottom: 6px; }
+        .slide-info-fee.free { color: var(--green); }
+        .slide-info-fee.paid { color: var(--gold); }
+        .slide-actions {
+            display: none; flex-direction: column; align-items: center; gap: 5px;
+            padding: 0 11px 10px; background: var(--ocean-mid); width: 100%;
+        }
+        .c-slide[data-pos="0"] .slide-actions { display: flex; }
+        .c-slide:not([data-pos="0"]) .slide-info-block,
+        .c-slide:not([data-pos="0"]) .slide-actions { display: none !important; }
+
+        .slide-open-btn {
+            font-family: 'Orbitron'; font-size: 0.42rem; letter-spacing: 2.5px;
+            padding: 7px 14px; border: 1px solid var(--cyan); background: rgba(0,5,10,0.85);
+            color: var(--cyan); cursor: pointer; width: 100%; text-align: center;
+            clip-path: polygon(6% 0, 100% 0, 94% 100%, 0 100%); transition: all 0.3s;
+        }
+        .slide-open-btn:hover { background: var(--cyan); color: var(--ocean); }
+        .slide-reg-btn {
+            font-family: 'Orbitron'; font-size: 0.38rem; letter-spacing: 2px;
+            padding: 6px 12px; border: 1px solid var(--green); background: rgba(0,5,10,0.85);
+            color: var(--green); cursor: pointer; width: 100%; text-align: center;
+            clip-path: polygon(6% 0, 100% 0, 94% 100%, 0 100%);
+            text-decoration: none; display: block; transition: all 0.3s;
+        }
+        .slide-reg-btn:hover { background: var(--green); color: var(--ocean); }
+
+        /* Carousel positions */
+        .c-slide[data-pos="0"] {
+            transform: translate(-50%, -50%) translateZ(0) scale(1);
+            z-index: 10;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.6), 0 0 40px rgba(0,242,255,0.12);
+            filter: brightness(1);
+        }
+        .c-slide[data-pos="1"] {
+            transform: translate(calc(-50% + 210px), -50%) translateZ(-90px) scale(0.82) rotateY(-15deg);
+            z-index: 8; filter: brightness(0.6);
+        }
+        .c-slide[data-pos="-1"] {
+            transform: translate(calc(-50% - 210px), -50%) translateZ(-90px) scale(0.82) rotateY(15deg);
+            z-index: 8; filter: brightness(0.6);
+        }
+        .c-slide[data-pos="2"] {
+            transform: translate(calc(-50% + 370px), -50%) translateZ(-200px) scale(0.65) rotateY(-25deg);
+            z-index: 6; filter: brightness(0.35);
+        }
+        .c-slide[data-pos="-2"] {
+            transform: translate(calc(-50% - 370px), -50%) translateZ(-200px) scale(0.65) rotateY(25deg);
+            z-index: 6; filter: brightness(0.35);
+        }
+        .c-slide[data-pos="3"], .c-slide[data-pos="-3"] {
+            transform: translate(-50%, -50%) translateZ(-340px) scale(0.45);
+            z-index: 1; filter: brightness(0.12); opacity: 0.25;
+        }
+        .c-slide[data-pos="far"] {
+            transform: translate(-50%, -50%) translateZ(-480px) scale(0.28);
+            z-index: 0; opacity: 0; pointer-events: none;
+        }
+
+        .carousel-arrow {
+            position: absolute; top: 50%; z-index: 20; transform: translateY(-50%);
+            width: 40px; height: 40px; border: 1px solid var(--border);
+            background: rgba(0,5,10,0.88); color: var(--cyan);
+            font-size: 1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s; backdrop-filter: blur(10px);
+            clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%);
+        }
+        .carousel-arrow:hover { background: rgba(0,242,255,0.14); border-color: var(--cyan); }
+        .carousel-arrow.prev { left: 0; }
+        .carousel-arrow.next { right: 0; }
+
+        .carousel-footer {
+            display: flex; align-items: center; justify-content: center;
+            gap: 14px; margin-top: 16px;
+        }
+        .c-dots { display: flex; gap: 6px; }
+        .c-dot {
+            width: 5px; height: 5px; border-radius: 50%;
+            background: rgba(255,255,255,0.18); cursor: pointer; transition: all 0.3s;
+        }
+        .c-dot.active { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); width: 16px; border-radius: 3px; }
+        .carousel-counter {
+            font-family: 'Share Tech Mono'; font-size: 0.55rem;
+            letter-spacing: 2px; color: rgba(255,255,255,0.28);
+        }
+        .carousel-counter span { color: var(--cyan); }
+        .carousel-empty {
+            height: 80px; display: flex; align-items: center; justify-content: center;
+            font-family: 'Share Tech Mono'; font-size: 0.62rem; letter-spacing: 3px;
+            color: rgba(255,255,255,0.18);
+        }
+
+        /* ══════════════ SUBSECTION & TYPE FILTERS ══════════════ */
+        .events-subsection { margin-top: 8px; }
+        .subsection-label {
+            font-family: 'Share Tech Mono'; font-size: 0.55rem;
+            letter-spacing: 4px; color: rgba(255,255,255,0.25);
+            margin-bottom: 16px; display: block;
+        }
+        .type-filters {
+            display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 24px;
+        }
+        .type-btn {
+            font-family: 'Orbitron'; font-size: 0.48rem; letter-spacing: 2px;
+            padding: 6px 12px; border: 1px solid var(--border); background: transparent;
+            color: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .type-btn:hover, .type-btn.active {
+            border-color: var(--cyan); color: var(--cyan); background: var(--cyan-glass);
+        }
+
+        /* ══════════════ EVENT CARDS GRID — REBUILT ══════════════ */
+        /*
+            Mobile  (< 480px) : 2 columns, slim posters
+            Small   (480–768) : 2 columns
+            Medium  (768–1100): 3 columns
+            Large   (1100+)   : 4 columns
+        */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            width: 100%;
+        }
+
+        @media (min-width: 480px) {
+            .events-grid { gap: 14px; }
+        }
+        @media (min-width: 768px) {
+            .events-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        }
+        @media (min-width: 1100px) {
+            .events-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        }
+
+        /* ── Event Card ── */
+        .event-card {
+            position: relative;
+            background: var(--ocean-card);
+            border: 1px solid var(--border);
+            overflow: hidden; cursor: pointer;
+            display: flex; flex-direction: column;
+            transition: transform 0.4s var(--expo), border-color 0.35s, box-shadow 0.4s;
+            /* sharp corner cut top-right */
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+        }
+        .event-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--border-bright);
+            box-shadow:
+                0 0 0 1px rgba(0,242,255,0.08),
+                0 16px 48px rgba(0,0,0,0.5),
+                0 0 32px rgba(0,242,255,0.08);
+        }
+
+        /* Animated scan line */
+        .event-card-scan {
+            position: absolute; top: -100%; left: 0;
+            width: 100%; height: 35%; pointer-events: none; z-index: 4;
+            background: linear-gradient(to bottom, transparent, rgba(0,242,255,0.035), transparent);
+            animation: scan 5s infinite linear;
+        }
+        @keyframes scan { to { top: 200%; } }
+
+        /* Corner accent — top-right */
+        .event-card::before {
+            content: '';
+            position: absolute; top: 0; right: 0; z-index: 3;
+            width: 12px; height: 12px;
+            background: var(--cyan);
+            clip-path: polygon(0 0, 100% 0, 100% 100%);
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        .event-card:hover::before { opacity: 1; }
+
+        /* ── Poster (strict 9:16) ── */
+        .event-poster {
+            width: 100%; aspect-ratio: 9/16;
+            overflow: hidden; position: relative; flex-shrink: 0;
+        }
+        .event-poster img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+            transition: transform 0.7s var(--expo);
+        }
+        .event-card:hover .event-poster img { transform: scale(1.06); }
+
+        /* Poster placeholder — beautiful gradient */
+        .poster-placeholder {
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 10px;
+            position: relative; overflow: hidden;
+        }
+        /* Gradient varies by event type */
+        .type-competition .poster-placeholder {
+            background: linear-gradient(160deg, #001a2c 0%, #000d15 45%, #001a1a 100%);
+        }
+        .type-workshop .poster-placeholder {
+            background: linear-gradient(160deg, #0d001a 0%, #000d15 45%, #001530 100%);
+        }
+        .type-exhibition .poster-placeholder {
+            background: linear-gradient(160deg, #001a10 0%, #000d15 45%, #001a28 100%);
+        }
+        .type-session .poster-placeholder {
+            background: linear-gradient(160deg, #1a1000 0%, #0d0800 45%, #001015 100%);
+        }
+        .type-cultural .poster-placeholder {
+            background: linear-gradient(160deg, #1a0010 0%, #0d0015 45%, #000d1a 100%);
+        }
+
+        /* Geometric grid pattern inside placeholder */
+        .poster-placeholder::before {
+            content: ''; position: absolute; inset: 0;
+            background:
+                repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(0,242,255,0.04) 30px, rgba(0,242,255,0.04) 31px),
+                repeating-linear-gradient(90deg, transparent, transparent 30px, rgba(0,242,255,0.04) 30px, rgba(0,242,255,0.04) 31px);
+        }
+        /* Radial glow behind icon */
+        .poster-placeholder::after {
+            content: ''; position: absolute;
+            width: 60%; height: 40%; top: 30%; left: 20%;
+            border-radius: 50%;
+            background: radial-gradient(ellipse, var(--type-glow, rgba(0,242,255,0.08)) 0%, transparent 70%);
+        }
+        .type-competition { --type-glow: rgba(0,242,255,0.1); }
+        .type-workshop    { --type-glow: rgba(181,107,255,0.1); }
+        .type-exhibition  { --type-glow: rgba(6,214,160,0.1); }
+        .type-session     { --type-glow: rgba(255,209,102,0.1); }
+        .type-cultural    { --type-glow: rgba(255,107,107,0.1); }
+
+        .poster-icon {
+            font-size: clamp(2rem, 6vw, 3rem);
+            position: relative; z-index: 1;
+            filter: drop-shadow(0 0 14px currentColor);
+        }
+        .poster-name-badge {
+            font-family: 'Orbitron'; font-size: clamp(0.38rem, 1.5vw, 0.5rem);
+            letter-spacing: 1.5px; color: rgba(255,255,255,0.7);
+            text-align: center; padding: 0 8px;
+            position: relative; z-index: 1;
+            line-height: 1.4; max-width: 90%;
+        }
+
+        /* Type tag on poster */
+        .event-type-tag {
+            position: absolute; top: 8px; left: 8px; z-index: 2;
+            font-family: 'Orbitron'; font-size: 0.38rem; letter-spacing: 2.5px;
+            padding: 3px 7px;
+            background: rgba(0,5,10,0.88); border: 1px solid var(--border);
+            color: var(--cyan);
+        }
+
+        /* Bottom gradient overlay on poster */
+        .poster-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0; height: 40%;
+            background: linear-gradient(to top, rgba(0,13,21,0.9) 0%, transparent 100%);
+            z-index: 1; pointer-events: none;
+        }
+
+        /* ── Card body (below poster) ── */
+        .event-card-body {
+            padding: 10px 11px 11px;
+            display: flex; flex-direction: column; gap: 6px;
+            flex: 1;
+        }
+
+        .event-card-name {
+            font-family: 'Orbitron'; font-size: clamp(0.52rem, 1.8vw, 0.68rem);
+            letter-spacing: 1.5px; color: #fff;
+            line-height: 1.35;
+        }
+        .event-card-short {
+            font-size: clamp(0.72rem, 2.2vw, 0.82rem);
+            color: rgba(255,255,255,0.45); line-height: 1.45;
+            display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        /* Prize tag */
+        .card-prize-tag {
+            font-family: 'Share Tech Mono'; font-size: 0.44rem; letter-spacing: 1.5px;
+            color: var(--gold); border: 1px solid rgba(255,209,102,0.3);
+            background: rgba(255,209,102,0.06); padding: 2px 6px;
+            display: inline-block; width: fit-content;
+        }
+
+        /* Meta row */
+        .event-meta {
+            display: flex; gap: 10px; flex-wrap: wrap;
+            margin-top: auto; padding-top: 4px;
+        }
+        .event-meta-item { display: flex; flex-direction: column; gap: 1px; }
+        .event-meta-label {
+            font-family: 'Share Tech Mono'; font-size: 0.38rem;
+            letter-spacing: 2px; color: rgba(255,255,255,0.28);
+        }
+        .event-meta-val { font-size: 0.7rem; color: rgba(255,255,255,0.72); }
+
+        .event-fee-badge {
+            font-family: 'Share Tech Mono'; font-size: 0.42rem;
+            letter-spacing: 1.5px; padding: 2px 6px;
+        }
+        .fee-free {
+            color: var(--green);
+            border: 1px solid rgba(6,214,160,0.35);
+            background: rgba(6,214,160,0.07);
+        }
+        .fee-paid {
+            color: var(--gold);
+            border: 1px solid rgba(255,209,102,0.35);
+            background: rgba(255,209,102,0.07);
+        }
+
+        /* Card footer — action buttons */
+        .event-card-footer {
+            display: flex; gap: 6px; align-items: center;
+            padding: 8px 11px 10px;
+            border-top: 1px solid rgba(0,242,255,0.06);
+            flex-wrap: wrap;
+        }
+        .event-view-btn {
+            font-family: 'Orbitron'; font-size: 0.42rem; letter-spacing: 1.5px;
+            padding: 6px 10px; border: 1px solid var(--border); background: transparent;
+            color: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.3s;
+            flex: 1; text-align: center;
+        }
+        .event-view-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+        .event-reg-btn {
+            font-family: 'Orbitron'; font-size: 0.42rem; letter-spacing: 1.5px;
+            padding: 6px 10px; border: 1px solid var(--cyan);
+            background: rgba(0,242,255,0.07); color: var(--cyan);
+            cursor: pointer; transition: all 0.3s; text-decoration: none;
+            display: inline-block; flex: 1; text-align: center;
+        }
+        .event-reg-btn:hover { background: var(--cyan); color: var(--ocean); }
+
+        /* Empty state */
+        .empty-state {
+            font-family: 'Share Tech Mono'; font-size: 0.65rem; letter-spacing: 3px;
+            color: rgba(255,255,255,0.18); padding: 40px; text-align: center;
+            border: 1px dashed rgba(255,255,255,0.08);
+            grid-column: 1/-1;
+        }
+
+        /* Day divider */
+        .day-divider {
+            display: flex; align-items: center; gap: 16px; margin: 64px 0 0;
+        }
+        .day-divider-line { flex: 1; height: 1px; background: linear-gradient(to right, var(--border), transparent); }
+        .day-divider-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--cyan); box-shadow: 0 0 10px var(--cyan);
+        }
+
+        /* ══════════════ MODAL ══════════════ */
+        #event-modal {
+            position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0,5,10,0.97); backdrop-filter: blur(24px);
+            overflow-y: auto; padding: 72px 16px 40px;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        #event-modal.open { opacity: 1; pointer-events: all; }
+        .modal-close {
+            position: fixed; top: 16px; right: 16px;
+            font-family: 'Orbitron'; font-size: 0.58rem; letter-spacing: 3px;
+            background: none; border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.45); padding: 8px 16px; cursor: pointer;
+            transition: all 0.3s; z-index: 2;
+        }
+        .modal-close:hover { border-color: var(--coral); color: var(--coral); }
+        .modal-inner { max-width: 640px; margin: 0 auto; }
+        .modal-poster-wrap {
+            width: 100%; max-width: 280px; margin: 0 auto 24px;
+            aspect-ratio: 9/16; overflow: hidden; border: 1px solid var(--border);
+        }
+        .modal-poster { width: 100%; height: 100%; object-fit: cover; }
+        .modal-poster-ph {
+            width: 100%; height: 100%; display: flex; align-items: center;
+            justify-content: center; font-size: 4.5rem;
+            background: linear-gradient(135deg, #001520, #000d15);
+        }
+        .modal-type-tag {
+            font-family: 'Share Tech Mono'; font-size: 0.58rem; letter-spacing: 4px;
+            color: var(--cyan); opacity: 0.65; display: block; margin-bottom: 8px;
+        }
+        .modal-title {
+            font-family: 'Orbitron'; font-size: clamp(1.1rem, 4vw, 1.7rem);
+            font-weight: 700; letter-spacing: 3px; margin-bottom: 18px;
+        }
+        .modal-meta-strip {
+            display: flex; gap: 20px; flex-wrap: wrap;
+            border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+            padding: 16px 0; margin-bottom: 22px;
+        }
+        .modal-meta-item { display: flex; flex-direction: column; gap: 4px; min-width: 90px; }
+        .modal-meta-label {
+            font-family: 'Share Tech Mono'; font-size: 0.42rem;
+            letter-spacing: 2.5px; color: rgba(255,255,255,0.28);
+        }
+        .modal-meta-val { font-size: 0.82rem; color: rgba(255,255,255,0.82); }
+        .modal-section { margin-bottom: 22px; }
+        .modal-section-title {
+            font-family: 'Share Tech Mono'; font-size: 0.58rem;
+            letter-spacing: 3.5px; color: var(--cyan); opacity: 0.65; margin-bottom: 10px;
+        }
+        .modal-section p { font-size: 0.92rem; line-height: 1.7; color: rgba(255,255,255,0.62); }
+        .modal-rules-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .modal-rules-list li {
+            font-size: 0.86rem; color: rgba(255,255,255,0.58);
+            padding-left: 16px; position: relative; line-height: 1.5;
+        }
+        .modal-rules-list li::before {
+            content: '›'; position: absolute; left: 0; color: var(--cyan); font-size: 1rem;
+        }
+        .modal-reg-btn {
+            font-family: 'Orbitron'; font-size: 0.62rem; letter-spacing: 3px;
+            padding: 13px 28px; border: 1px solid var(--cyan);
+            background: rgba(0,242,255,0.07); color: var(--cyan);
+            cursor: pointer; text-decoration: none; display: inline-block;
+            clip-path: polygon(6% 0, 100% 0, 94% 100%, 0 100%); transition: all 0.3s;
+        }
+        .modal-reg-btn:hover { background: var(--cyan); color: var(--ocean); }
+        .modal-prize-banner {
+            background: linear-gradient(135deg, rgba(255,209,102,0.07), rgba(255,209,102,0.02));
+            border: 1px solid rgba(255,209,102,0.3); border-left: 3px solid var(--gold);
+            padding: 13px 16px; margin-bottom: 18px;
+            display: flex; align-items: center; gap: 13px;
+        }
+        .modal-prize-icon { font-size: 1.5rem; }
+        .modal-prize-label {
+            font-family: 'Share Tech Mono'; font-size: 0.42rem;
+            letter-spacing: 2.5px; color: var(--gold); opacity: 0.65; margin-bottom: 2px;
+        }
+        .modal-prize-val {
+            font-family: 'Orbitron'; font-size: 0.95rem;
+            color: var(--gold); letter-spacing: 2px; font-weight: 700;
+        }
+
+        /* ══════════════ TOAST ══════════════ */
+        .toast {
+            position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+            background: rgba(0,242,255,0.1); border: 1px solid var(--cyan);
+            font-family: 'Share Tech Mono'; font-size: 0.62rem; letter-spacing: 3px;
+            color: var(--cyan); padding: 11px 24px; z-index: 99999;
+            opacity: 0; transition: all 0.4s; backdrop-filter: blur(10px); white-space: nowrap;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* ══════════════ DESKTOP NAV LINKS (hidden on mobile) ══════════════ */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            nav { padding: 0 16px; }
+        }
+
+        /* ══════════════ LARGE CAROUSEL ADJUSTMENTS ══════════════ */
+        @media (min-width: 768px) {
+            .carousel-stage { height: 540px; }
+            .c-slide { width: 200px; }
+            .c-slide[data-pos="1"] { transform: translate(calc(-50% + 240px), -50%) translateZ(-100px) scale(0.83) rotateY(-15deg); }
+            .c-slide[data-pos="-1"] { transform: translate(calc(-50% - 240px), -50%) translateZ(-100px) scale(0.83) rotateY(15deg); }
+            .c-slide[data-pos="2"] { transform: translate(calc(-50% + 420px), -50%) translateZ(-200px) scale(0.67) rotateY(-24deg); }
+            .c-slide[data-pos="-2"] { transform: translate(calc(-50% - 420px), -50%) translateZ(-200px) scale(0.67) rotateY(24deg); }
+        }
+        @media (min-width: 1100px) {
+            .carousel-stage { height: 580px; }
+            .c-slide { width: 220px; }
+            .c-slide[data-pos="1"] { transform: translate(calc(-50% + 260px), -50%) translateZ(-100px) scale(0.84) rotateY(-16deg); }
+            .c-slide[data-pos="-1"] { transform: translate(calc(-50% - 260px), -50%) translateZ(-100px) scale(0.84) rotateY(16deg); }
+            .c-slide[data-pos="2"] { transform: translate(calc(-50% + 450px), -50%) translateZ(-220px) scale(0.68) rotateY(-26deg); }
+            .c-slide[data-pos="-2"] { transform: translate(calc(-50% - 450px), -50%) translateZ(-220px) scale(0.68) rotateY(26deg); }
+        }
+
+        /* Hide far slides on small screens */
+        @media (max-width: 480px) {
+            .c-slide[data-pos="2"], .c-slide[data-pos="-2"],
+            .c-slide[data-pos="3"], .c-slide[data-pos="-3"] { opacity: 0; pointer-events: none; }
+            .c-slide[data-pos="1"] { transform: translate(calc(-50% + 170px), -50%) translateZ(-80px) scale(0.8) rotateY(-13deg); }
+            .c-slide[data-pos="-1"] { transform: translate(calc(-50% - 170px), -50%) translateZ(-80px) scale(0.8) rotateY(13deg); }
+            .c-slide { width: 150px; }
+            .carousel-stage { height: 440px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="bg">
+    <div class="grid-bg"></div>
+    <div class="radar"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+    <a href="index.html" class="nav-brand">ANCHORAGE'26</a>
+    <div class="nav-links">
+        <a href="index.html">HOME</a>
+        <a href="events.html" class="active">EVENTS</a>
+        <a href="about.html">ABOUT</a>
+        <a href="register.html" class="nav-reg">REGISTER</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<header class="page-hero">
+    <span class="page-hero-tag">// ANCHORAGE 2026 · 10–12 OCTOBER</span>
+    <h1>EVENTS</h1>
+    <p>Three days. Competitions. Workshops. Exhibitions. Endless possibilities.</p>
+</header>
+
+<!-- ═══════════════════════════════════════
+     STICKY DAY SELECTOR
+═══════════════════════════════════════ -->
+<div class="day-selector-bar" id="daySelectorBar">
+    <div class="day-selector-inner">
+        <button class="day-btn active" data-target="day-1" onclick="scrollToDay('day-1', this)">
+            DAY 1
+            <span class="day-date-sub">10 OCT · FRI</span>
+        </button>
+        <button class="day-btn" data-target="day-2" onclick="scrollToDay('day-2', this)">
+            DAY 2
+            <span class="day-date-sub">11 OCT · SAT</span>
+        </button>
+        <button class="day-btn" data-target="day-3" onclick="scrollToDay('day-3', this)">
+            DAY 3
+            <span class="day-date-sub">12 OCT · SUN</span>
+        </button>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     DAY SECTIONS
+═══════════════════════════════════════ -->
+<div class="days-container">
+
+    <!-- ═══ DAY 1 ═══ -->
+    <section class="day-section" id="day-1">
+        <div class="day-section-header">
+            <span class="day-num-badge">DAY 01</span>
+            <div class="day-section-title-wrap">
+                <div class="day-section-title">IGNITION</div>
+                <div class="day-section-date">10 OCTOBER 2026 · FRIDAY</div>
+            </div>
+            <div class="day-section-count" id="count-1"></div>
+        </div>
+
+        <!-- 3D CAROUSEL — Day 1 competitions & workshops -->
+        <div class="carousel-wrap">
+            <span class="carousel-label">// FEATURED — COMPETITIONS & WORKSHOPS</span>
+            <div class="carousel-stage" id="stage-1">
+                <!-- Injected by JS -->
+            </div>
+            <div class="carousel-footer">
+                <button class="carousel-arrow prev" id="prev-1">&#8592;</button>
+                <div class="c-dots" id="dots-1"></div>
+                <div class="carousel-counter"><span id="cur-1">1</span> / <span id="tot-1">1</span></div>
+                <button class="carousel-arrow next" id="next-1">&#8594;</button>
+            </div>
+        </div>
+
+        <!-- All Day 1 Events Grid -->
+        <div class="events-subsection">
+            <span class="subsection-label">// ALL EVENTS — DAY 1</span>
+            <div class="type-filters" id="tf-1">
+                <button class="type-btn active" data-filter="all">ALL</button>
+                <button class="type-btn" data-filter="competition">COMPETITION</button>
+                <button class="type-btn" data-filter="workshop">WORKSHOP</button>
+                <button class="type-btn" data-filter="exhibition">EXHIBITION</button>
+                <button class="type-btn" data-filter="session">SESSION</button>
+            </div>
+            <div class="events-grid" id="grid-1"></div>
+        </div>
+    </section>
+
+    <div class="day-divider"><div class="day-divider-line"></div><div class="day-divider-dot"></div><div class="day-divider-line" style="background: linear-gradient(to left, var(--border), transparent);"></div></div>
+
+    <!-- ═══ DAY 2 ═══ -->
+    <section class="day-section" id="day-2">
+        <div class="day-section-header">
+            <span class="day-num-badge">DAY 02</span>
+            <div class="day-section-title-wrap">
+                <div class="day-section-title">MERIDIAN</div>
+                <div class="day-section-date">11 OCTOBER 2026 · SATURDAY</div>
+            </div>
+            <div class="day-section-count" id="count-2"></div>
+        </div>
+
+        <div class="carousel-wrap">
+            <span class="carousel-label">// FEATURED — COMPETITIONS & WORKSHOPS</span>
+            <div class="carousel-stage" id="stage-2"></div>
+            <div class="carousel-footer">
+                <button class="carousel-arrow prev" id="prev-2">&#8592;</button>
+                <div class="c-dots" id="dots-2"></div>
+                <div class="carousel-counter"><span id="cur-2">1</span> / <span id="tot-2">1</span></div>
+                <button class="carousel-arrow next" id="next-2">&#8594;</button>
+            </div>
+        </div>
+
+        <div class="events-subsection">
+            <span class="subsection-label">// ALL EVENTS — DAY 2</span>
+            <div class="type-filters" id="tf-2">
+                <button class="type-btn active" data-filter="all">ALL</button>
+                <button class="type-btn" data-filter="competition">COMPETITION</button>
+                <button class="type-btn" data-filter="workshop">WORKSHOP</button>
+                <button class="type-btn" data-filter="exhibition">EXHIBITION</button>
+                <button class="type-btn" data-filter="session">SESSION</button>
+            </div>
+            <div class="events-grid" id="grid-2"></div>
+        </div>
+    </section>
+
+    <div class="day-divider"><div class="day-divider-line"></div><div class="day-divider-dot"></div><div class="day-divider-line" style="background: linear-gradient(to left, var(--border), transparent);"></div></div>
+
+    <!-- ═══ DAY 3 ═══ -->
+    <section class="day-section" id="day-3">
+        <div class="day-section-header">
+            <span class="day-num-badge">DAY 03</span>
+            <div class="day-section-title-wrap">
+                <div class="day-section-title">CULMINATION</div>
+                <div class="day-section-date">12 OCTOBER 2026 · SUNDAY</div>
+            </div>
+            <div class="day-section-count" id="count-3"></div>
+        </div>
+
+        <div class="carousel-wrap">
+            <span class="carousel-label">// FEATURED — COMPETITIONS & WORKSHOPS</span>
+            <div class="carousel-stage" id="stage-3"></div>
+            <div class="carousel-footer">
+                <button class="carousel-arrow prev" id="prev-3">&#8592;</button>
+                <div class="c-dots" id="dots-3"></div>
+                <div class="carousel-counter"><span id="cur-3">1</span> / <span id="tot-3">1</span></div>
+                <button class="carousel-arrow next" id="next-3">&#8594;</button>
+            </div>
+        </div>
+
+        <div class="events-subsection">
+            <span class="subsection-label">// ALL EVENTS — DAY 3</span>
+            <div class="type-filters" id="tf-3">
+                <button class="type-btn active" data-filter="all">ALL</button>
+                <button class="type-btn" data-filter="competition">COMPETITION</button>
+                <button class="type-btn" data-filter="workshop">WORKSHOP</button>
+                <button class="type-btn" data-filter="exhibition">EXHIBITION</button>
+                <button class="type-btn" data-filter="cultural">CULTURAL</button>
+                <button class="type-btn" data-filter="session">SESSION</button>
+            </div>
+            <div class="events-grid" id="grid-3"></div>
+        </div>
+    </section>
+
+</div>
+
+<!-- EVENT DETAIL MODAL -->
+<div id="event-modal">
+    <button class="modal-close" id="modalClose">✕ CLOSE</button>
+    <div class="modal-inner" id="modalContent"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  EVENT DATA
+// ════════════════════════════════════════════════════════════
+const EVENTS = [
+    // DAY 1
+    { id:'interactive-session', day:1, type:'session', name:'Interactive Session with Chief Guest',
+      shortDesc:'Engaging dialogue with technical experts on future innovations aligned with the theme.',
+      fullDesc:'An engaging session with technical experts exploring future innovations and ideas aligned with the theme "Reimagining the Possibilities." Students get an exclusive opportunity to interact directly with the chief guest and exchange ideas on the future of maritime and shipbuilding.',
+      venue:'Seminar Complex Main Hall', team:'Open for All', fee:'free', feeAmt:0, registration:false, icon:'💬', poster:'', prize:'',
+      rules:['Open to all registered participants.','Questions may be submitted in advance at the registration desk.','Respectful and professional conduct expected.'] },
+
+    { id:'navy-expo-d1', day:1, type:'exhibition', name:'Indian Navy Expo',
+      shortDesc:'Advanced naval technologies and insights into maritime innovation in collaboration with the Indian Navy.',
+      fullDesc:'Organized in collaboration with the Indian Navy, this expo showcases advanced naval technologies and offers insights into the future of maritime innovation. An unmissable experience for all maritime enthusiasts.',
+      venue:'Students Amenity Centre', team:'Open for All', fee:'free', feeAmt:0, registration:false, icon:'⚓', poster:'', prize:'',
+      rules:['Open for all participants and visitors.','Photography with naval exhibits subject to permission.','Handle all exhibits with care and respect.'] },
+
+    { id:'ship-model-d1', day:1, type:'exhibition', name:'Ship Model Expo',
+      shortDesc:'A showcase of student-created ship models presenting innovative designs and concepts.',
+      fullDesc:'A showcase of student-created ship models presenting innovative designs and concepts to the audience. Participants demonstrate engineering and design skills through scale models of various vessels.',
+      venue:'Department of Ship Technology', team:'Open for All', fee:'free', feeAmt:0, registration:false, icon:'🚢', poster:'', prize:'',
+      rules:['Open for display and viewing by all participants.','Models are not to be touched without permission from the creator.','Entries judged on innovation, accuracy, and presentation.'] },
+
+    { id:'paper-presentation', day:1, type:'competition', name:'Paper Presentation',
+      shortDesc:'Present innovative research and ideas aligned with "Reimagining the Possibilities."',
+      fullDesc:'A platform for students to present innovative research and ideas, encouraging knowledge sharing and creative thinking aligned with the theme. Participants present technical papers before a panel of experts.',
+      venue:'Department of Ship Technology', team:'Solo / Duo', fee:'paid', feeAmt:150, registration:true, icon:'📄', poster:'', prize:'₹5,000 · ₹3,000 · ₹1,500',
+      rules:['Abstract must be submitted 7 days before the event.','Presentation duration: 8 minutes + 3 minutes Q&A.','Topic must be relevant to maritime, shipbuilding, or emerging technologies.','Maximum 2 members per team.','Plagiarism will lead to immediate disqualification.','Decision of judges is final and binding.'] },
+
+    { id:'boat-wars', day:1, type:'competition', name:'Boat Wars',
+      shortDesc:'Design and test boat models — evaluating maneuverability, stability, and performance.',
+      fullDesc:'A competitive event where participants design and test boat models, evaluating their maneuverability, stability, and overall performance. Teams bring pre-built RC or manually operated boats and compete in head-to-head challenges.',
+      venue:'Department of Ship Technology', team:'2 Members', fee:'paid', feeAmt:200, registration:true, icon:'⛵', poster:'', prize:'₹8,000 · ₹5,000 · ₹2,500',
+      rules:['Boat model must be designed and built by the team.','Maximum dimensions: 60cm × 30cm × 30cm.','Battery-operated or wind-powered boats only. No combustion engines.','Each team gets 2 attempts. Best attempt counts.','Judging criteria: speed, stability, maneuverability (40/30/30).','Team size: exactly 2 members.'] },
+
+    { id:'autocad-ws', day:1, type:'workshop', name:'AutoCAD Workshop',
+      shortDesc:'Learn to design and model using AutoCAD, transforming ideas into precise digital creations.',
+      fullDesc:'A hands-on session where participants learn to design and model using AutoCAD, transforming ideas into precise digital creations. Covering 2D drafting, 3D modeling fundamentals, and maritime-specific applications.',
+      venue:'Department of Ship Technology', team:'Solo', fee:'paid', feeAmt:250, registration:true, icon:'📐', poster:'', prize:'',
+      rules:['Participants must bring their own laptop with AutoCAD installed (trial version acceptable).','Basic computer knowledge required.','Certificate of participation provided.','Limited seats — first come, first served.','Duration: approximately 3 hours.'] },
+
+    { id:'ev-vr-ws', day:1, type:'workshop', name:'EV Design using Virtual Reality',
+      shortDesc:'Explore electric vehicle design through immersive VR technology.',
+      fullDesc:'A hands-on workshop exploring EV design through immersive VR technology, enabling participants to visualize and innovate future mobility solutions. VR headsets and software will be provided.',
+      venue:'Seminar Complex Mini Hall', team:'Solo', fee:'paid', feeAmt:300, registration:true, icon:'🥽', poster:'', prize:'',
+      rules:['No prior VR or EV design experience required.','VR headsets will be provided by organizers.','Certificate of participation provided.','Limited seats: 30 participants.'] },
+
+    { id:'mentalism', day:1, type:'session', name:'Mentalism Program',
+      shortDesc:'Explore the science behind human perception, psychology, and analytical thinking.',
+      fullDesc:'An interesting session led by a technical expert, exploring the blend of psychology, observation, and analytical thinking to reveal the science behind human perception and decision-making. A fascinating journey into the mind.',
+      venue:'Seminar Complex Main Hall', team:'Open for All', fee:'paid', feeAmt:100, registration:true, icon:'🧠', poster:'', prize:'',
+      rules:['Paid entry — registration required.','Audience participation may be requested.','No disruptions during the live session.'] },
+
+    { id:'film-screening', day:1, type:'session', name:'Film Screening',
+      shortDesc:'A grand cinematic experience featuring an inspiring film to spark motivation and community.',
+      fullDesc:'A grand cinematic experience featuring an inspiring film, designed to create a vibrant cultural atmosphere, spark motivation, and bring students together through the power of storytelling.',
+      venue:'Seminar Complex Main Hall', team:'Open for All', fee:'free', feeAmt:0, registration:false, icon:'🎬', poster:'', prize:'',
+      rules:['Open to all registered participants.','Silence and respect requested during the screening.'] },
+
+    // DAY 2
+    { id:'national-conference', day:2, type:'session', name:'National Conference & Panel Discussion',
+      shortDesc:'Industry experts discuss maritime technologies, sustainability, and future trends in naval architecture.',
+      fullDesc:'A prestigious national-level conference bringing together industry experts, researchers, and academicians to discuss cutting-edge maritime technologies, sustainable shipbuilding, and future trends in naval architecture — all aligned with the theme "Reimagining the Possibilities."',
+      venue:'Seminar Complex Main Hall', team:'Open for All', fee:'free', feeAmt:0, registration:false, icon:'🎤', poster:'', prize:'',
+      rules:['Open to all registered participants.','Professional conduct expected throughout the session.','Questions during Q&A must be submitted to the moderator.'] },
+
+    { id:'motivational-talk', day:2, type:'session', name:'Motivational Expert Talk',
+      shortDesc:'An inspiring session on self-development, personal growth, and achieving your full potential.',
+      fullDesc:'An inspiring session by a technical expert focused on self-development and personal growth, encouraging students to improve, adapt, and achieve their full potential. A powerful talk designed to unlock ambition and drive.',
+      venue:'Seminar Complex Main Hall', team:'Open for All', fee:'free', feeAmt:0, registration:false, icon:'🌟', poster:'', prize:'',
+      rules:['Open to all registered participants.','Punctuality requested.'] },
+
+    { id:'navy-expo-d2', day:2, type:'exhibition', name:'Indian Navy Expo (Day 2)',
+      shortDesc:'Day 2 of the Indian Navy showcase — exploring advanced maritime technologies.',
+      fullDesc:'Continuing the Indian Navy Expo on Day 2, showcasing advanced naval technologies and offering more insights into the future of maritime innovation.',
+      venue:'Students Amenity Centre', team:'Open for All', fee:'free', feeAmt:0, registration:false, icon:'⚓', poster:'', prize:'',
+      rules:['Open for all participants and visitors.','Photography subject to permission.'] },
+
+    { id:'ship-model-d2', day:2, type:'exhibition', name:'Ship Model Expo (Day 2)',
+      shortDesc:"Day 2 showcase — People's Choice Award voting opens.",
+      fullDesc:"Continuing the Ship Model Expo on Day 2. People's Choice Award voting opens today — come and vote for your favourite design.",
+      venue:'Department of Ship Technology', team:'Open for All', fee:'free', feeAmt:0, registration:false, icon:'🚢', poster:'', prize:'',
+      rules:['Open for viewing by all participants.','Voting for People\'s Choice Award open on Day 2.'] },
+
+    { id:'debate', day:2, type:'competition', name:'Debate',
+      shortDesc:'Debate on important topics aligned with "Reimagining the Possibilities."',
+      fullDesc:'An engaging competition where participants debate on important topics aligned with the theme. Teams argue for and against motions related to maritime technology, sustainability, and innovation.',
+      venue:'Department of Ship Technology', team:'2 Members', fee:'paid', feeAmt:100, registration:true, icon:'🗣️', poster:'', prize:'₹6,000 · ₹4,000 · ₹2,000',
+      rules:['Team size: 2 members.','Topics will be announced 30 minutes before the round.','Each speaker gets 3 minutes; rebuttal is 1.5 minutes per team.','Judging criteria: Content (40%), Delivery (30%), Rebuttal (30%).','Decision of judges is final.'] },
+
+    { id:'quiz', day:2, type:'competition', name:'Quiz',
+      shortDesc:'Test your knowledge on topics aligned with "Reimagining the Possibilities."',
+      fullDesc:'An exciting competition that tests participants\' knowledge spanning maritime history, modern naval engineering, sustainable technology, and general science.',
+      venue:'Department of Ship Technology', team:'2–3 Members', fee:'paid', feeAmt:150, registration:true, icon:'❓', poster:'', prize:'₹6,000 · ₹4,000 · ₹2,000',
+      rules:['Team size: 2 to 3 members.','Multiple rounds: Prelims (written) and Finals (buzzer-based).','Top 6 teams from prelims proceed to finals.','No mobile phones or electronic devices allowed.','Decision of the quiz master is final.','Negative marking applicable in finals.'] },
+
+    { id:'ml-ws', day:2, type:'workshop', name:'Machine Learning Workshop',
+      shortDesc:'Hands-on introduction to machine learning fundamentals and real-world applications.',
+      fullDesc:'A hands-on workshop introducing participants to the fundamentals of machine learning, enabling them to build smart models and explore real-world applications aligned with future technologies.',
+      venue:'Department of Ship Technology', team:'Solo', fee:'paid', feeAmt:300, registration:true, icon:'🤖', poster:'', prize:'',
+      rules:['Participants must bring their own laptop.','Python (basic level) knowledge is helpful but not mandatory.','Google Colab will be used — internet connection required.','Certificate of participation provided.','Limited seats: 40 participants.'] },
+
+    { id:'engine-ws', day:2, type:'workshop', name:'Engine Management & Tuning Workshop',
+      shortDesc:'Hands-on insight into engine systems, tuning techniques, and performance optimization.',
+      fullDesc:'A practical workshop focused on understanding engine systems, tuning techniques, and performance optimization, giving participants hands-on insight into modern automotive engineering.',
+      venue:'Seminar Complex Mini Hall', team:'Solo', fee:'paid', feeAmt:250, registration:true, icon:'🔧', poster:'', prize:'',
+      rules:['Basic knowledge of mechanics is an advantage.','Safety gear provided — must be worn during hands-on sessions.','Certificate of participation provided.','Limited seats: 35 participants.'] },
+
+    // DAY 3
+    { id:'navy-expo-d3', day:3, type:'exhibition', name:'Indian Navy Expo (Day 3)',
+      shortDesc:'Final day of the Indian Navy showcase — last chance to explore naval innovations.',
+      fullDesc:'The final day of the Indian Navy Expo. Showcasing advanced naval technologies and insights into the future of maritime innovation.',
+      venue:'Students Amenity Centre', team:'Open for All', fee:'free', feeAmt:0, registration:false, icon:'⚓', poster:'', prize:'',
+      rules:['Open for all participants and visitors.','Photography subject to permission.'] },
+
+    { id:'ship-model-d3', day:3, type:'exhibition', name:'Ship Model Expo (Day 3)',
+      shortDesc:"Final day — awards for Best Design, Best Innovation & People's Choice announced.",
+      fullDesc:"The final day of the Ship Model Expo. Awards for Best Design, Best Innovation, and People's Choice will be announced.",
+      venue:'Department of Ship Technology', team:'Open for All', fee:'free', feeAmt:0, registration:false, icon:'🚢', poster:'', prize:'',
+      rules:['Open for viewing by all participants.','Awards ceremony on Day 3.'] },
+
+    { id:'treasure-hunt', day:3, type:'competition', name:'Treasure Hunt',
+      shortDesc:'Solve clues and complete challenges combining teamwork, strategy, and quick thinking.',
+      fullDesc:'An exciting adventure-based event where participants solve clues and complete challenges, combining teamwork, strategy, and quick thinking in a fun-filled experience across the campus.',
+      venue:'Department of Ship Technology (HQ)', team:'3–4 Members', fee:'paid', feeAmt:200, registration:true, icon:'🪙', poster:'', prize:'₹8,000 · ₹5,000 · ₹2,500',
+      rules:['Team size: 3 to 4 members.','Clue sheets will be provided at the starting point.','Teams must not damage any property during the hunt.','Any form of GPS or external assistance is prohibited.','Team that completes all checkpoints first wins.','Decision of organizers is final in case of disputes.'] },
+
+    { id:'shark-tank', day:3, type:'competition', name:'Shark Tank',
+      shortDesc:'Pitch innovative ideas to a panel — showcase creativity, business sense, and problem-solving.',
+      fullDesc:'An exciting pitch-based competition where participants present innovative ideas to a panel, showcasing creativity, business sense, and problem-solving skills.',
+      venue:'Department of Ship Technology', team:'1–3 Members', fee:'paid', feeAmt:150, registration:true, icon:'🦈', poster:'', prize:'₹10,000 · ₹6,000 · ₹3,000',
+      rules:['Team size: 1 to 3 members.','Each team gets 5 minutes to pitch + 3 minutes Q&A from panel.','Pitch must include: Problem, Solution, Market potential, Innovation.','PowerPoint presentation allowed (max 10 slides).','Ideas must be original — no existing products.','Judging criteria: Innovation (35%), Feasibility (30%), Presentation (35%).'] },
+
+    { id:'python-ws', day:3, type:'workshop', name:'Python Workshop',
+      shortDesc:'Hands-on programming with Python — logic building, problem-solving, and real-world apps.',
+      fullDesc:'A hands-on workshop introducing participants to programming with Python, focusing on logic building, problem-solving, and developing real-world applications.',
+      venue:'Department of Ship Technology', team:'Solo', fee:'paid', feeAmt:250, registration:true, icon:'🐍', poster:'', prize:'',
+      rules:['Participants must bring their own laptop.','Python 3.x must be installed (or use Google Colab).','No prior programming experience required.','Certificate of participation provided.','Limited seats: 40 participants.'] },
+
+    { id:'closing', day:3, type:'session', name:'Closing Ceremony',
+      shortDesc:'Grand closing ceremony and prize distribution marking the successful completion of Anchorage 2026.',
+      fullDesc:'A grand closing ceremony marking the successful completion of Anchorage 2026. Prize distribution for all competitions, acknowledgment of participants, and the official conclusion of the fest.',
+      venue:'Open Auditorium', team:'Open for All', fee:'free', feeAmt:0, registration:false, icon:'🏆', poster:'', prize:'',
+      rules:['All participants are encouraged to attend.','Winners must be present to collect prizes.','Formal/Fest T-Shirt attire encouraged.'] },
+];
+
+// ════════════════════════════════════════════════════════════
+//  CAROUSEL STATE per day
+// ════════════════════════════════════════════════════════════
+const carouselState = { '1': 0, '2': 0, '3': 0 };
+const activeFilter  = { '1': 'all', '2': 'all', '3': 'all' };
+
+// ════════════════════════════════════════════════════════════
+//  SCROLL TO DAY
+// ════════════════════════════════════════════════════════════
+function scrollToDay(sectionId, btn) {
+    // Update active tab
+    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    // Scroll to section with offset for sticky bar
+    const el = document.getElementById(sectionId);
+    if (!el) return;
+    const stickyHeight = document.getElementById('daySelectorBar').offsetHeight + 72 + 20;
+    const top = el.getBoundingClientRect().top + window.scrollY - stickyHeight;
+    window.scrollTo({ top, behavior: 'smooth' });
+}
+
+// Update active day tab on scroll
+function onScroll() {
+    const stickyH = document.getElementById('daySelectorBar').offsetHeight + 72 + 40;
+    ['1','2','3'].forEach(d => {
+        const el = document.getElementById('day-' + d);
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= stickyH && rect.bottom > stickyH) {
+            document.querySelectorAll('.day-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.target === 'day-' + d);
+            });
+        }
+    });
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+
+// ════════════════════════════════════════════════════════════
+//  3D CAROUSEL
+// ════════════════════════════════════════════════════════════
+function getCarouselEvents(day) {
+    return EVENTS.filter(e => e.day === Number(day) && (e.type === 'competition' || e.type === 'workshop'));
+}
+
+function buildCarousel(day) {
+    const events = getCarouselEvents(day);
+    const stage  = document.getElementById('stage-' + day);
+    const dots   = document.getElementById('dots-' + day);
+    document.getElementById('tot-' + day).textContent = events.length || 1;
+
+    if (!events.length) {
+        stage.innerHTML = '<div class="carousel-empty">// NO FEATURED EVENTS //</div>';
+        document.getElementById('prev-' + day).style.display = 'none';
+        document.getElementById('next-' + day).style.display = 'none';
+        return;
+    }
+
+    stage.innerHTML = events.map((ev, i) => {
+        const hasPoster = ev.poster && ev.poster.trim() !== '';
+        const regHref = ev.registration ? `href="register.html?event=${ev.id}"` : '';
+        const regBtn = ev.registration
+            ? `<a ${regHref} class="slide-reg-btn" onclick="event.stopPropagation()">⚡ REGISTER</a>`
+            : `<span class="slide-reg-btn" style="border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.3);cursor:default;">FREE ENTRY</span>`;
+        return `
+        <div class="c-slide" data-idx="${i}" onclick="carouselClickHandler(${day},${i})">
+            <div class="slide-inner">
+                <div class="slide-poster-wrap">
+                    ${hasPoster
+                        ? `<img class="slide-poster" src="${ev.poster}" alt="${ev.name}">`
+                        : `<div class="slide-placeholder"><div class="slide-ph-icon">${ev.icon}</div><div class="slide-ph-name">${ev.name}</div></div>`
+                    }
+                    <span class="slide-type-tag">${ev.type.toUpperCase()}</span>
+                </div>
+                <div class="slide-info-block">
+                    <div class="slide-info-name">${ev.name}</div>
+                    <div class="slide-info-fee ${ev.fee}">${ev.fee === 'free' ? 'FREE ENTRY' : '₹' + ev.feeAmt + ' / HEAD'}</div>
+                </div>
+                <div class="slide-actions">
+                    <button class="slide-open-btn" onclick="event.stopPropagation(); openModal('${ev.id}')">VIEW DETAILS</button>
+                    ${regBtn}
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+
+    dots.innerHTML = events.map((_, i) =>
+        `<div class="c-dot${i===0?' active':''}" onclick="goToSlide(${day},${i})"></div>`
+    ).join('');
+
+    renderCarousel(day);
+}
+
+function renderCarousel(day) {
+    const events = getCarouselEvents(day);
+    if (!events.length) return;
+    const idx  = carouselState[String(day)];
+    const slides = document.querySelectorAll(`#stage-${day} .c-slide`);
+    slides.forEach((slide, i) => {
+        const pos = i - idx;
+        const absPos = Math.abs(pos);
+        let posStr = pos === 0 ? '0' : (absPos > 3 ? 'far' : String(pos));
+        slide.setAttribute('data-pos', posStr);
+    });
+    // Update dots
+    document.querySelectorAll(`#dots-${day} .c-dot`).forEach((d, i) => d.classList.toggle('active', i === idx));
+    document.getElementById('cur-' + day).textContent = idx + 1;
+}
+
+function carouselClickHandler(day, idx) {
+    const pos = idx - carouselState[String(day)];
+    if (pos === 0) return;
+    carouselStep(day, pos > 0 ? 1 : -1);
+}
+
+function carouselStep(day, dir) {
+    const events = getCarouselEvents(day);
+    if (!events.length) return;
+    carouselState[String(day)] = (carouselState[String(day)] + dir + events.length) % events.length;
+    renderCarousel(day);
+}
+
+function goToSlide(day, idx) {
+    carouselState[String(day)] = idx;
+    renderCarousel(day);
+}
+
+// ════════════════════════════════════════════════════════════
+//  EVENT GRIDS
+// ════════════════════════════════════════════════════════════
+function renderCard(ev) {
+    const hasPoster = ev.poster && ev.poster.trim() !== '';
+    const feeLabel = ev.fee === 'free'
+        ? `<span class="event-fee-badge fee-free">FREE</span>`
+        : `<span class="event-fee-badge fee-paid">&#8377;${ev.feeAmt}</span>`;
+    const regBtn = ev.registration
+        ? `<a href="register.html?event=${ev.id}" class="event-reg-btn" onclick="event.stopPropagation()">REGISTER</a>`
+        : '';
+    const prizeTag = ev.prize ? `<div class="card-prize-tag">&#127942; ${ev.prize}</div>` : '';
+    return `
+    <div class="event-card type-${ev.type}" onclick="openModal('${ev.id}')">
+        <div class="event-card-scan"></div>
+        <div class="event-poster">
+            ${hasPoster
+                ? `<img src="${ev.poster}" alt="${ev.name}">`
+                : `<div class="poster-placeholder"><div class="poster-icon">${ev.icon}</div><div class="poster-name-badge">${ev.name}</div></div>`
+            }
+            <div class="poster-overlay"></div>
+            <span class="event-type-tag">${ev.type.toUpperCase()}</span>
+        </div>
+        <div class="event-card-body">
+            <div class="event-card-name">${ev.name}</div>
+            <div class="event-card-short">${ev.shortDesc}</div>
+            ${prizeTag}
+            <div class="event-meta">
+                <div class="event-meta-item">
+                    <span class="event-meta-label">TEAM</span>
+                    <span class="event-meta-val">${ev.team}</span>
+                </div>
+                <div class="event-meta-item">
+                    <span class="event-meta-label">FEE</span>
+                    ${feeLabel}
+                </div>
+            </div>
+        </div>
+        <div class="event-card-footer">
+            <button class="event-view-btn" onclick="event.stopPropagation(); openModal('${ev.id}')">DETAILS</button>
+            ${regBtn}
+        </div>
+    </div>`;
+}
+
+function renderGrid(day) {
+    const filter = activeFilter[day];
+    const events = EVENTS.filter(e => e.day === Number(day) && (filter === 'all' || e.type === filter));
+    const grid = document.getElementById('grid-' + day);
+    if (!grid) return;
+    grid.innerHTML = events.length
+        ? events.map(renderCard).join('')
+        : `<div class="empty-state">// NO EVENTS MATCH FILTER //</div>`;
+    document.getElementById('count-' + day).textContent = EVENTS.filter(e => e.day === Number(day)).length + ' EVENTS';
+}
+
+// ════════════════════════════════════════════════════════════
+//  TYPE FILTERS
+// ════════════════════════════════════════════════════════════
+function initTypeFilters() {
+    ['1','2','3'].forEach(day => {
+        const container = document.getElementById('tf-' + day);
+        if (!container) return;
+        container.querySelectorAll('.type-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                activeFilter[day] = btn.dataset.filter;
+                container.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderGrid(day);
+            });
+        });
+    });
+}
+
+// ════════════════════════════════════════════════════════════
+//  MODAL
+// ════════════════════════════════════════════════════════════
+function openModal(id) {
+    const ev = EVENTS.find(e => e.id === id);
+    if (!ev) return;
+    const hasPoster = ev.poster && ev.poster.trim() !== '';
+    const feeLabel = ev.fee === 'free'
+        ? `<span class="event-fee-badge fee-free" style="font-size:0.75rem;padding:6px 16px;">FREE ENTRY</span>`
+        : `<span class="event-fee-badge fee-paid" style="font-size:0.75rem;padding:6px 16px;">₹${ev.feeAmt} / HEAD</span>`;
+    const regBtn = ev.registration
+        ? `<a href="register.html?event=${id}" class="modal-reg-btn">REGISTER NOW</a>`
+        : `<span style="font-family:'Share Tech Mono';font-size:0.65rem;color:rgba(255,255,255,0.3);letter-spacing:3px;">OPEN TO ALL — NO REGISTRATION REQUIRED</span>`;
+    const dateMap = { 1:'10 OCT', 2:'11 OCT', 3:'12 OCT' };
+
+    const prizeBanner = ev.prize
+        ? `<div class="modal-prize-banner"><div class="modal-prize-icon">🏆</div><div><div class="modal-prize-label">// PRIZE POOL</div><div class="modal-prize-val">${ev.prize}</div></div></div>`
+        : '';
+
+    document.getElementById('modalContent').innerHTML = `
+        <div class="modal-poster-wrap">
+            ${hasPoster
+                ? `<img src="${ev.poster}" class="modal-poster" alt="${ev.name}">`
+                : `<div class="modal-poster-ph">${ev.icon}</div>`
+            }
+        </div>
+        <span class="modal-type-tag">// ${ev.type.toUpperCase()} · DAY ${ev.day}</span>
+        <h2 class="modal-title">${ev.name}</h2>
+        <div class="modal-meta-strip">
+            <div class="modal-meta-item"><span class="modal-meta-label">VENUE</span><span class="modal-meta-val" style="font-size:0.7rem;">${ev.venue}</span></div>
+            <div class="modal-meta-item"><span class="modal-meta-label">TEAM SIZE</span><span class="modal-meta-val">${ev.team}</span></div>
+            <div class="modal-meta-item"><span class="modal-meta-label">FEE</span><span class="modal-meta-val">${ev.fee === 'free' ? 'FREE' : '₹'+ev.feeAmt}</span></div>
+            <div class="modal-meta-item"><span class="modal-meta-label">DATE</span><span class="modal-meta-val">${dateMap[ev.day]}</span></div>
+        </div>
+        ${prizeBanner}
+        <div class="modal-section">
+            <div class="modal-section-title">// ABOUT THE EVENT</div>
+            <p>${ev.fullDesc}</p>
+        </div>
+        <div class="modal-section">
+            <div class="modal-section-title">// RULES & GUIDELINES</div>
+            <ul class="modal-rules-list">${ev.rules.map(r=>`<li>${r}</li>`).join('')}</ul>
+        </div>
+        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:16px;">
+            ${regBtn} ${feeLabel}
+        </div>`;
+    const modal = document.getElementById('event-modal');
+    modal.classList.add('open');
+    modal.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('event-modal').classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+// ════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+    [1,2,3].forEach(d => {
+        buildCarousel(d);
+        renderGrid(String(d));
+        document.getElementById('prev-' + d).addEventListener('click', () => carouselStep(d, -1));
+        document.getElementById('next-' + d).addEventListener('click', () => carouselStep(d, 1));
+    });
+    initTypeFilters();
+
+    // Touch swipe support for carousel on mobile
+    [1,2,3].forEach(d => {
+        const stage = document.getElementById('stage-' + d);
+        if (!stage) return;
+        let touchStartX = 0;
+        stage.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+        stage.addEventListener('touchend', e => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 40) carouselStep(d, diff > 0 ? 1 : -1);
+        }, { passive: true });
+    });
+
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('event-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // URL params: ?day=1|2|3 or ?event=id
+    const params = new URLSearchParams(window.location.search);
+    const dayParam = params.get('day');
+    if (dayParam && ['1','2','3'].includes(dayParam)) {
+        setTimeout(() => {
+            const btn = document.querySelector(`.day-btn[data-target="day-${dayParam}"]`);
+            if (btn) scrollToDay('day-' + dayParam, btn);
+        }, 300);
+    }
+    const eventParam = params.get('event');
+    if (eventParam) setTimeout(() => openModal(eventParam), 300);
+});
+</script>
+</body>
+</html>
