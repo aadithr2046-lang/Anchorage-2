@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Anchorage 2026</title>
+    <style>
+        /* ══════════════════════════════════════════════════════
+           ANCHORAGE 2026 — REGISTER PAGE — CSS REBUILT
+           Mobile-first, full-width, no wasted space
+        ══════════════════════════════════════════════════════ */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&family=Bebas+Neue&display=swap');
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --cyan: #00f2ff;
+            --cyan-dim: rgba(0,242,255,0.6);
+            --cyan-glass: rgba(0,242,255,0.08);
+            --ocean: #00050a;
+            --ocean-dark: #000810;
+            --ocean-card: #000a16;
+            --border: rgba(0,242,255,0.22);
+            --border-dim: rgba(0,242,255,0.1);
+            --error: #ff4466;
+            --success: #00ff88;
+            --gold: #ffd166;
+            --expo: cubic-bezier(0.19, 1, 0.22, 1);
+            --nav-h: 64px;
+            --page-px: 16px;
+        }
+        @media (min-width: 600px) { :root { --page-px: 24px; } }
+        @media (min-width: 1024px) { :root { --page-px: 40px; } }
+
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--ocean);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        h1, h2, h3 { font-family: 'Orbitron', sans-serif; letter-spacing: 4px; }
+
+        /* ── Background ── */
+        #bg-layer {
+            position: fixed; inset: 0; z-index: -5; overflow: hidden;
+            background: #000810;
+        }
+        .radar-bg {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(0,242,255,0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,242,255,0.035) 1px, transparent 1px);
+            background-size: 60px 60px; opacity: 0.5;
+        }
+        .caustics {
+            position: absolute; width: 200%; height: 200%; top: -50%; left: -50%;
+            background: repeating-linear-gradient(45deg, transparent, transparent 5%,
+                rgba(0,242,255,0.015) 10%, transparent 15%);
+            filter: blur(50px); animation: rays 20s infinite linear; pointer-events: none;
+        }
+        @keyframes rays { to { transform: rotate(360deg); } }
+
+        /* ── Nav ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: var(--nav-h); z-index: 1000;
+            background: rgba(0,5,10,0.92); backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center;
+        }
+        .nav-inner {
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; max-width: 1200px; margin: 0 auto;
+            padding: 0 var(--page-px);
+        }
+        .nav-logo { height: 44px; display: flex; align-items: center; }
+        .nav-logo a { display: flex; height: 100%; align-items: center; }
+        .nav-logo img { height: 100%; width: auto; filter: drop-shadow(0 0 5px var(--cyan)); }
+        .nav-logo-text {
+            display: none; font-family: 'Orbitron'; color: var(--cyan);
+            font-size: 0.85rem; letter-spacing: 3px;
+        }
+        .nav-links { display: flex; gap: 24px; }
+        .nav-link {
+            font-family: 'Orbitron'; font-size: 0.62rem; letter-spacing: 3px;
+            text-decoration: none; color: rgba(255,255,255,0.55);
+            position: relative; padding-bottom: 3px;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: 0; left: 50%;
+            width: 0; height: 1px; background: var(--cyan);
+            transition: width 0.4s var(--expo); transform: translateX(-50%);
+        }
+        .nav-link:hover, .nav-link.active { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+        /* Hamburger */
+        .hamburger {
+            display: none; flex-direction: column; gap: 5px;
+            cursor: pointer; padding: 8px; background: none; border: none;
+        }
+        .hamburger span {
+            display: block; width: 22px; height: 2px;
+            background: var(--cyan); box-shadow: 0 0 6px var(--cyan); transition: all 0.4s;
+        }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .mobile-menu {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,3,8,0.98); backdrop-filter: blur(30px);
+            z-index: 1050; flex-direction: column; align-items: center; justify-content: center;
+            transform: translateY(-100%); transition: transform 0.6s var(--expo);
+        }
+        .mobile-menu.open { transform: translateY(0); }
+        .mobile-menu-link {
+            font-family: 'Orbitron'; font-size: 1rem; letter-spacing: 7px;
+            text-decoration: none; color: rgba(255,255,255,0.45);
+            padding: 14px 0; width: 80%; text-align: center;
+            border-bottom: 1px solid rgba(0,242,255,0.08); transition: color 0.4s;
+        }
+        .mobile-menu-link:hover { color: var(--cyan); }
+
+        /* ── Page layout ── */
+        .page-wrap {
+            width: 100%; max-width: 900px; margin: 0 auto;
+            padding: 0 var(--page-px);
+        }
+        .page-hero {
+            padding: calc(var(--nav-h) + 40px) 0 32px;
+            text-align: center;
+        }
+        .page-hero h1 {
+            font-family: 'Bebas Neue'; font-size: clamp(2.8rem, 10vw, 5.5rem);
+            letter-spacing: 8px; color: var(--cyan); line-height: 1;
+        }
+        .page-hero-sub {
+            font-size: 0.65rem; opacity: 0.4; letter-spacing: 5px;
+            margin-top: 10px; font-family: 'Orbitron';
+        }
+
+        /* ── Section divider ── */
+        .section-divider {
+            display: flex; align-items: center; gap: 14px;
+            margin: 28px 0 18px;
+        }
+        .section-divider span {
+            font-family: 'Orbitron'; font-size: 0.48rem; letter-spacing: 4px;
+            color: var(--cyan); opacity: 0.65; white-space: nowrap;
+        }
+        .section-divider::before, .section-divider::after {
+            content: ''; flex: 1; height: 1px;
+            background: linear-gradient(to right, transparent, rgba(0,242,255,0.28));
+        }
+        .section-divider::after { background: linear-gradient(to left, transparent, rgba(0,242,255,0.28)); }
+
+        /* ── Offer banner ── */
+        #offerBanner {
+            background: linear-gradient(135deg, rgba(0,242,255,0.06), rgba(0,242,255,0.02));
+            border: 1px solid var(--border); border-left: 3px solid var(--cyan);
+            padding: 16px 20px; margin-bottom: 24px;
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 98% 100%, 0 100%);
+            animation: offerGlow 3s ease-in-out infinite;
+        }
+        @keyframes offerGlow {
+            0%,100% { box-shadow: 0 0 10px rgba(0,242,255,0.08); }
+            50% { box-shadow: 0 0 24px rgba(0,242,255,0.18); }
+        }
+        .offer-label {
+            font-family: 'Orbitron'; font-size: 0.42rem; letter-spacing: 4px;
+            color: var(--cyan); opacity: 0.6; margin-bottom: 5px;
+        }
+        #offerText { font-size: 0.92rem; line-height: 1.6; opacity: 0.85; }
+        #offerBanner.hidden { display: none; }
+
+        /* ── Form card ── */
+        .form-card {
+            background: rgba(0,10,22,0.85); border: 1px solid var(--border);
+            padding: 20px; margin-bottom: 16px; position: relative; overflow: hidden;
+        }
+        @media (min-width: 480px) { .form-card { padding: 28px 24px; } }
+        @media (min-width: 768px) { .form-card { padding: 36px 32px; } }
+        .form-card::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+        }
+
+        /* ── Form elements ── */
+        /* Single column by default, 2-col on wider screens */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+        @media (min-width: 560px) {
+            .form-row { grid-template-columns: 1fr 1fr; gap: 16px; }
+        }
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block; font-family: 'Orbitron'; font-size: 0.42rem;
+            letter-spacing: 3px; color: var(--cyan); opacity: 0.7;
+            margin-bottom: 7px; text-transform: uppercase;
+        }
+        .form-group label .req { color: var(--error); margin-left: 2px; }
+        .form-control {
+            width: 100%; background: rgba(0,242,255,0.04);
+            border: 1px solid rgba(0,242,255,0.18);
+            color: #fff; padding: 11px 14px;
+            font-family: 'Rajdhani'; font-size: 1rem;
+            transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+            outline: none; appearance: none;
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 98.5% 100%, 0 100%);
+        }
+        .form-control:focus {
+            border-color: var(--cyan);
+            background: rgba(0,242,255,0.07);
+            box-shadow: 0 0 18px rgba(0,242,255,0.1);
+        }
+        .form-control::placeholder { color: rgba(255,255,255,0.22); }
+        .form-control.error { border-color: var(--error); }
+        .error-msg { font-size: 0.7rem; color: var(--error); margin-top: 4px; display: none; }
+        .form-control.error + .error-msg { display: block; }
+        select.form-control { cursor: pointer; }
+        select.form-control option { background: #000d1a; }
+
+        /* ── Event selection grid ── */
+        /* Auto-selected banner shown when coming from events.html */
+        .preselected-banner {
+            display: none;
+            background: linear-gradient(135deg, rgba(0,242,255,0.08), rgba(0,242,255,0.03));
+            border: 1px solid var(--cyan);
+            border-left: 3px solid var(--cyan);
+            padding: 14px 18px; margin-bottom: 20px;
+            align-items: center; gap: 14px;
+        }
+        .preselected-banner.show { display: flex; }
+        .preselected-banner-icon { font-size: 1.6rem; flex-shrink: 0; }
+        .preselected-banner-text { flex: 1; }
+        .preselected-banner-label {
+            font-family: 'Orbitron'; font-size: 0.4rem; letter-spacing: 3px;
+            color: var(--cyan); opacity: 0.6; margin-bottom: 3px;
+        }
+        .preselected-banner-name {
+            font-family: 'Orbitron'; font-size: 0.72rem; letter-spacing: 2px; color: #fff;
+        }
+        .preselected-banner-change {
+            font-family: 'Orbitron'; font-size: 0.38rem; letter-spacing: 2px;
+            color: rgba(255,255,255,0.35); cursor: pointer; padding: 6px 10px;
+            border: 1px solid rgba(255,255,255,0.15); background: none;
+            transition: all 0.3s; white-space: nowrap; flex-shrink: 0;
+        }
+        .preselected-banner-change:hover { color: var(--cyan); border-color: var(--cyan); }
+
+        .event-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px; margin-top: 8px;
+        }
+        @media (min-width: 560px) { .event-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
+        @media (min-width: 768px) { .event-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; } }
+
+        .event-card-select {
+            border: 1px solid rgba(0,242,255,0.18);
+            background: rgba(0,242,255,0.03);
+            padding: 12px; cursor: pointer;
+            transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 93% 100%, 0 100%);
+        }
+        .event-card-select:hover {
+            border-color: rgba(0,242,255,0.45);
+            background: rgba(0,242,255,0.07);
+        }
+        .event-card-select.selected {
+            border-color: var(--cyan);
+            background: rgba(0,242,255,0.12);
+            box-shadow: 0 0 18px rgba(0,242,255,0.15);
+        }
+        .event-card-select input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+        .ev-select-badge {
+            position: absolute; top: 6px; right: 6px;
+            font-family: 'Orbitron'; font-size: 0.35rem; letter-spacing: 1.5px;
+            padding: 2px 6px; border: 1px solid rgba(0,242,255,0.35); color: var(--cyan);
+        }
+        .ev-select-icon { font-size: 1.5rem; margin-bottom: 6px; }
+        .ev-select-name {
+            font-family: 'Orbitron'; font-size: 0.52rem; letter-spacing: 1.5px;
+            color: var(--cyan); margin-bottom: 3px; line-height: 1.3;
+        }
+        .ev-select-meta { font-size: 0.68rem; opacity: 0.48; line-height: 1.3; }
+        .ev-price-tag { font-family: 'Bebas Neue'; font-size: 1.1rem; color: var(--cyan); margin-top: 4px; }
+
+        /* ── Team section ── */
+        #teamSection {
+            overflow: hidden; max-height: 0; opacity: 0;
+            transition: max-height 0.5s var(--expo), opacity 0.4s;
+        }
+        #teamSection.visible { max-height: 1200px; opacity: 1; }
+
+        /* Teammate rows — stacked on mobile */
+        .teammate-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px; margin-bottom: 12px;
+        }
+        @media (min-width: 560px) {
+            .teammate-row { grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end; }
+        }
+        .btn-ghost {
+            background: none; border: 1px solid rgba(0,242,255,0.28);
+            color: var(--cyan); font-family: 'Orbitron'; font-size: 0.48rem;
+            letter-spacing: 2px; padding: 10px 14px; cursor: pointer;
+            transition: all 0.3s; white-space: nowrap; width: 100%;
+        }
+        .btn-ghost:hover { background: rgba(0,242,255,0.1); border-color: var(--cyan); }
+        .btn-ghost.danger { border-color: rgba(255,68,102,0.35); color: var(--error); }
+        .btn-ghost.danger:hover { background: rgba(255,68,102,0.09); border-color: var(--error); }
+        @media (min-width: 560px) {
+            .btn-ghost { width: auto; }
+        }
+
+        /* ── Submit button ── */
+        .btn-primary {
+            display: block; width: 100%;
+            background: transparent; border: 1px solid var(--cyan);
+            color: var(--cyan); font-family: 'Orbitron'; font-size: 0.72rem;
+            letter-spacing: 4px; padding: 16px; cursor: pointer;
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+            transition: all 0.4s var(--expo); margin-top: 8px;
+            position: relative; overflow: hidden;
+        }
+        .btn-primary::before {
+            content: ''; position: absolute; inset: 0;
+            background: var(--cyan); transform: scaleX(0);
+            transform-origin: left; transition: transform 0.4s var(--expo);
+        }
+        .btn-primary:hover { color: #000810; box-shadow: 0 0 36px rgba(0,242,255,0.35); }
+        .btn-primary:hover::before { transform: scaleX(1); }
+        .btn-primary span { position: relative; z-index: 1; }
+        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-primary:disabled::before { display: none; }
+
+        /* ── Amount display ── */
+        .amount-display {
+            background: rgba(0,242,255,0.05); border: 1px solid var(--border-dim);
+            padding: 18px 20px; margin-bottom: 18px;
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 12px; flex-wrap: wrap;
+        }
+        .amount-label { font-family: 'Orbitron'; font-size: 0.46rem; letter-spacing: 3px; opacity: 0.5; }
+        .amount-value { font-family: 'Bebas Neue'; font-size: 2.2rem; color: var(--cyan); }
+        .amount-note { font-size: 0.72rem; opacity: 0.4; margin-top: 2px; }
+
+        /* ── Security badge ── */
+        .security-note {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.72rem; opacity: 0.38; margin-top: 14px;
+            flex-wrap: wrap;
+        }
+        .security-note svg { flex-shrink: 0; }
+
+        /* ── Overlay modal ── */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,5,10,0.96);
+            backdrop-filter: blur(20px); z-index: 5000;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s;
+        }
+        .modal-overlay.visible { opacity: 1; pointer-events: all; }
+        .modal-box {
+            background: #000d1a; border: 1px solid var(--border);
+            padding: 36px 28px; max-width: 480px; width: 100%; text-align: center;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 94% 100%, 0 100%);
+            transform: translateY(20px); transition: transform 0.5s var(--expo);
+        }
+        .modal-overlay.visible .modal-box { transform: translateY(0); }
+        .modal-icon { font-size: 2.8rem; margin-bottom: 18px; }
+        .modal-title { font-family: 'Orbitron'; font-size: 1.1rem; letter-spacing: 4px; color: var(--cyan); margin-bottom: 12px; }
+        .modal-text { font-size: 0.92rem; opacity: 0.7; line-height: 1.7; margin-bottom: 22px; }
+        .modal-reg-id { font-family: 'Orbitron'; font-size: 0.6rem; letter-spacing: 3px; color: var(--cyan); opacity: 0.55; margin-bottom: 22px; }
+        .btn-modal {
+            display: inline-block; padding: 12px 36px; color: var(--cyan);
+            text-decoration: none; font-family: 'Orbitron'; font-size: 0.62rem;
+            letter-spacing: 3px; border: 1px solid var(--cyan);
+            background: rgba(0,242,255,0.07);
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+            transition: all 0.4s; cursor: pointer;
+        }
+        .btn-modal:hover { background: var(--cyan); color: #000; }
+
+        /* ── Spinner ── */
+        .spinner {
+            display: inline-block; width: 20px; height: 20px;
+            border: 2px solid rgba(0,242,255,0.25); border-top-color: var(--cyan);
+            border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 8px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Confirmation box ── */
+        .confirm-box {
+            background: rgba(0,242,255,0.03); border: 1px solid var(--border-dim);
+            padding: 20px; margin-bottom: 18px;
+        }
+        .confirm-row {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            padding: 8px 0; border-bottom: 1px solid rgba(0,242,255,0.06);
+            gap: 12px;
+        }
+        .confirm-row:last-child { border: none; }
+        .confirm-key {
+            font-family: 'Orbitron'; font-size: 0.4rem; letter-spacing: 2px;
+            opacity: 0.38; padding-top: 2px; flex-shrink: 0;
+        }
+        .confirm-val { font-size: 0.88rem; text-align: right; word-break: break-word; }
+        .confirm-val.highlight { color: var(--cyan); font-family: 'Orbitron'; font-size: 0.66rem; }
+
+        /* ── Step indicator ── */
+        .steps { display: flex; gap: 0; margin-bottom: 28px; }
+        .step {
+            flex: 1; display: flex; align-items: center; position: relative;
+            font-family: 'Orbitron'; font-size: 0.4rem; letter-spacing: 2px;
+        }
+        .step-num {
+            width: 26px; height: 26px; border-radius: 50%;
+            border: 1px solid rgba(0,242,255,0.28);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.65rem; flex-shrink: 0; transition: all 0.4s;
+        }
+        .step.active .step-num { border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 10px rgba(0,242,255,0.35); }
+        .step.done .step-num { background: var(--cyan); border-color: var(--cyan); color: #000; }
+        .step-label { margin-left: 8px; opacity: 0.38; white-space: nowrap; }
+        .step.active .step-label, .step.done .step-label { opacity: 1; color: var(--cyan); }
+        .step-line { flex: 1; height: 1px; background: rgba(0,242,255,0.12); margin: 0 8px; }
+        .step.done .step-line { background: rgba(0,242,255,0.38); }
+        /* Hide labels on tiny screens */
+        @media (max-width: 400px) { .step-label { display: none; } }
+
+        /* ── Sections ── */
+        #sectionFill, #sectionConfirm, #sectionPaying { display: none; }
+        #sectionFill.active, #sectionConfirm.active, #sectionPaying.active { display: block; }
+        .section-paying-center { text-align: center; padding: 60px 0; }
+        .paying-title { font-family: 'Orbitron'; font-size: 0.95rem; letter-spacing: 4px; color: var(--cyan); margin-bottom: 10px; }
+        .paying-sub { font-size: 0.82rem; opacity: 0.48; }
+
+        /* ── Action row (back + proceed buttons) ── */
+        .action-row {
+            display: flex; gap: 10px; flex-wrap: wrap;
+        }
+        .action-row .btn-ghost { flex: 1; min-width: 120px; }
+        .action-row .btn-primary { flex: 2; min-width: 180px; margin-top: 0; }
+
+        /* ── Footer ── */
+        footer {
+            padding: 36px 0 22px; border-top: 1px solid var(--border);
+            text-align: center; margin-top: 60px;
+        }
+        .footer-bottom { font-size: 0.72rem; opacity: 0.38; }
+
+        /* ── Nav mobile ── */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .mobile-menu { display: flex; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="bg-layer">
+    <div class="radar-bg"></div>
+    <div class="caustics"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+    <div class="nav-inner">
+        <div class="nav-logo">
+            <a href="index.html">
+                <img src="static/logo1.png" alt="Anchorage 2026" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
+                <span class="nav-logo-text">ANCHORAGE'26</span>
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="events.html" class="nav-link">Events</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="register.html" class="nav-link active">Register</a>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" class="mobile-menu-link">Home</a>
+    <a href="events.html" class="mobile-menu-link">Events</a>
+    <a href="about.html" class="mobile-menu-link">About</a>
+    <a href="register.html" class="mobile-menu-link">Register</a>
+</div>
+
+<!-- PAGE -->
+<div class="page-hero">
+    <div class="container">
+        <h1>Register</h1>
+        <p class="page-hero-sub">ANCHORAGE 2026 · DEPT OF SHIP TECHNOLOGY · CUSAT</p>
+    </div>
+</div>
+
+<div class="container" style="padding-bottom: 80px;">
+
+    <!-- STEP INDICATOR -->
+    <div class="steps" id="stepIndicator">
+        <div class="step active" id="step1">
+            <div class="step-num">1</div>
+            <span class="step-label">Details</span>
+            <div class="step-line"></div>
+        </div>
+        <div class="step" id="step2">
+            <div class="step-num">2</div>
+            <span class="step-label">Confirm</span>
+            <div class="step-line"></div>
+        </div>
+        <div class="step" id="step3">
+            <div class="step-num">3</div>
+            <span class="step-label">Payment</span>
+        </div>
+    </div>
+
+    <!-- OFFER BANNER (populated from backend) -->
+    <div id="offerBanner" class="hidden">
+        <div class="offer-label">◈ CURRENT OFFER</div>
+        <div id="offerText"></div>
+    </div>
+
+    <!-- ═══ STEP 1: FILL DETAILS ═══ -->
+    <div id="sectionFill" class="active">
+
+        <!-- PERSONAL INFO -->
+        <div class="form-card">
+            <div class="section-divider"><span>Personal Information</span></div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Full Name <span class="req">*</span></label>
+                    <input type="text" id="regName" class="form-control" placeholder="Your full name">
+                    <div class="error-msg">Please enter your full name</div>
+                </div>
+                <div class="form-group">
+                    <label>Email Address <span class="req">*</span></label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="you@example.com">
+                    <div class="error-msg">Please enter a valid email</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Phone Number <span class="req">*</span></label>
+                    <input type="tel" id="regPhone" class="form-control" placeholder="+91 00000 00000" maxlength="15">
+                    <div class="error-msg">Please enter a valid phone number</div>
+                </div>
+                <div class="form-group">
+                    <label>College / Institution <span class="req">*</span></label>
+                    <input type="text" id="regCollege" class="form-control" placeholder="Your college name">
+                    <div class="error-msg">Please enter your college name</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Department / Course <span class="req">*</span></label>
+                    <input type="text" id="regDept" class="form-control" placeholder="e.g. Ship Technology, Mech Engg">
+                    <div class="error-msg">Please enter your department</div>
+                </div>
+                <div class="form-group">
+                    <label>Year of Study <span class="req">*</span></label>
+                    <select id="regYear" class="form-control">
+                        <option value="">Select year</option>
+                        <option value="1">1st Year</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                        <option value="PG">Post Graduate</option>
+                        <option value="PhD">PhD</option>
+                        <option value="Faculty">Faculty / Staff</option>
+                    </select>
+                    <div class="error-msg">Please select your year</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EVENT SELECTION -->
+        <div class="form-card">
+            <div class="section-divider"><span>Select Event</span></div>
+            <!-- Auto-selected event banner (populated when coming from events.html) -->
+            <div class="preselected-banner" id="preselectedBanner">
+                <div class="preselected-banner-icon" id="preselectedIcon">🎯</div>
+                <div class="preselected-banner-text">
+                    <div class="preselected-banner-label">◈ EVENT PRE-SELECTED FROM EVENTS PAGE</div>
+                    <div class="preselected-banner-name" id="preselectedName">—</div>
+                </div>
+                <button class="preselected-banner-change" onclick="showAllEvents()">CHANGE EVENT</button>
+            </div>
+            <div class="event-grid" id="eventGrid">
+                <!-- Populated by JS -->
+            </div>
+            <div id="eventError" class="error-msg" style="margin-top:10px;">Please select an event</div>
+        </div>
+
+        <!-- TEAM MEMBERS (conditional) -->
+        <div id="teamSection" class="form-card" style="margin-top:0; border-top: none; padding-top:20px;">
+            <div class="section-divider"><span>Team Members</span></div>
+            <p style="font-size:0.8rem; opacity:0.5; margin-bottom:16px;" id="teamHint">Add your team members below. One QR code will be generated for the team leader (you).</p>
+            <div id="teammateList"></div>
+            <button class="btn-ghost" id="addTeammateBtn" onclick="addTeammate()">+ ADD TEAMMATE</button>
+        </div>
+
+        <button class="btn-primary" onclick="goToConfirm()"><span>REVIEW REGISTRATION →</span></button>
+    </div>
+
+    <!-- ═══ STEP 2: CONFIRM ═══ -->
+    <div id="sectionConfirm">
+        <div class="form-card">
+            <div class="section-divider"><span>Registration Summary</span></div>
+            <div class="confirm-box" id="confirmBox">
+                <!-- Populated dynamically -->
+            </div>
+
+            <div class="amount-display" id="amountDisplay">
+                <div>
+                    <div class="amount-label">REGISTRATION FEE</div>
+                    <div class="amount-note" id="amountNote"></div>
+                </div>
+                <div style="text-align:right;">
+                    <div class="amount-value" id="amountDisplay2">₹0</div>
+                </div>
+            </div>
+
+            <p style="font-size:0.8rem; opacity:0.5; margin-bottom:20px;">Please review your details carefully. Your ticket will be emailed to the registered address after payment is confirmed.</p>
+
+            <div class="action-row">
+                <button class="btn-ghost" onclick="goBack()">← EDIT DETAILS</button>
+                <button class="btn-primary" onclick="initiatePayment()"><span>PROCEED TO PAYMENT →</span></button>
+            </div>
+
+            <div class="security-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f2ff" stroke-width="1.5"><path d="M12 2l9 4v6c0 5.25-3.75 10.15-9 11.5C6.75 22.15 3 17.25 3 12V6l9-4z"/></svg>
+                Payments secured by Razorpay. We never store card details.
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ STEP 3: PAYING ═══ -->
+    <div id="sectionPaying">
+        <div class="form-card section-paying-center">
+            <div class="spinner" style="width:40px;height:40px;border-width:3px;margin:0 auto 20px;display:block;"></div>
+            <div class="paying-title" id="payingTitle">PROCESSING PAYMENT</div>
+            <div class="paying-sub" id="payingSub">Please do not close this window…</div>
+        </div>
+    </div>
+
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="successModal">
+    <div class="modal-box">
+        <div class="modal-icon">✅</div>
+        <div class="modal-title">Registration Confirmed!</div>
+        <div class="modal-text" id="successText">Your registration is confirmed. A ticket with QR code has been sent to your email address.</div>
+        <div class="modal-reg-id" id="successRegId"></div>
+        <button class="btn-modal" onclick="document.getElementById('successModal').classList.remove('visible'); window.location.href='index.html'">GO TO HOME</button>
+    </div>
+</div>
+
+<!-- ERROR MODAL -->
+<div class="modal-overlay" id="errorModal">
+    <div class="modal-box">
+        <div class="modal-icon">⚠️</div>
+        <div class="modal-title">Something Went Wrong</div>
+        <div class="modal-text" id="errorText">An error occurred. Please try again or contact us.</div>
+        <button class="btn-modal" onclick="document.getElementById('errorModal').classList.remove('visible')">CLOSE</button>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <p class="footer-bottom">© 2026 Department of Ship Technology, CUSAT. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- Razorpay SDK -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+// ══════════════════════════════════════════════
+//  EVENTS DATA (loaded from backend or fallback)
+// ══════════════════════════════════════════════
+// ── Events list — IDs must match events.html exactly ──
+let EVENTS = [
+    // DAY 1
+    { id:'paper-presentation', name:'Paper Presentation',            icon:'📄', cat:'Competition', team:true,  maxTeam:1, price:100, desc:'Present your research paper to a panel of experts.', day:'Day 1' },
+    { id:'boat-wars',          name:'Boat Wars',                     icon:'⛵', cat:'Competition', team:true,  maxTeam:1, price:200, desc:'Build and race remote-controlled boats.',             day:'Day 1' },
+    { id:'autocad-ws',         name:'AutoCAD Workshop',              icon:'⚙️', cat:'Workshop',    team:false, maxTeam:0, price:150, desc:'Hands-on 2D/3D design with AutoCAD.',                day:'Day 1' },
+    { id:'ev-vr-ws',           name:'EV & VR Workshop',              icon:'🥽', cat:'Workshop',    team:false, maxTeam:0, price:200, desc:'Explore electric vehicles and virtual reality.',     day:'Day 1' },
+    { id:'mentalism',          name:'Mentalism Show',                icon:'🧠', cat:'Session',     team:false, maxTeam:0, price:0,   desc:'Live mentalism and mind-reading experience.',         day:'Day 1' },
+    { id:'film-screening',     name:'Short Film Screening',          icon:'🎬', cat:'Exhibition',  team:false, maxTeam:0, price:0,   desc:'Curated short films by student filmmakers.',          day:'Day 1' },
+    { id:'national-conference',name:'National Technical Conference', icon:'🎙️', cat:'Session',     team:false, maxTeam:0, price:0,   desc:'Expert talks on cutting-edge maritime topics.',       day:'Day 1' },
+    { id:'motivational-talk',  name:'Motivational Talk',             icon:'💬', cat:'Session',     team:false, maxTeam:0, price:0,   desc:'Inspiring talk for students and professionals.',      day:'Day 1' },
+    { id:'interactive-session',name:'Interactive Session',           icon:'💬', cat:'Session',     team:false, maxTeam:0, price:0,   desc:'Engage directly with the chief guest.',              day:'Day 1' },
+    // DAY 2
+    { id:'debate',             name:'Debate',                        icon:'🗣️', cat:'Competition', team:true,  maxTeam:1, price:100, desc:'Argue your side in a competitive debate.',           day:'Day 2' },
+    { id:'quiz',               name:'Quiz',                          icon:'❓', cat:'Competition', team:true,  maxTeam:2, price:150, desc:'Test your knowledge on maritime and tech.',           day:'Day 2' },
+    { id:'ml-ws',              name:'Machine Learning Workshop',     icon:'🤖', cat:'Workshop',    team:false, maxTeam:0, price:300, desc:'Hands-on introduction to machine learning.',          day:'Day 2' },
+    { id:'engine-ws',          name:'Engine Management Workshop',    icon:'🔧', cat:'Workshop',    team:false, maxTeam:0, price:250, desc:'Hands-on engine tuning and performance workshop.',    day:'Day 2' },
+    // DAY 3
+    { id:'treasure-hunt',      name:'Treasure Hunt',                 icon:'🪙', cat:'Competition', team:true,  maxTeam:3, price:200, desc:'Solve clues and race across campus.',                day:'Day 3' },
+    { id:'shark-tank',         name:'Shark Tank',                    icon:'🦈', cat:'Competition', team:true,  maxTeam:2, price:150, desc:'Pitch your startup idea to a panel of judges.',      day:'Day 3' },
+    { id:'python-ws',          name:'Python Workshop',               icon:'🐍', cat:'Workshop',    team:false, maxTeam:0, price:250, desc:'Hands-on Python programming from scratch.',           day:'Day 3' },
+    // FREE / OPEN
+    { id:'navy-expo-d1',       name:'Indian Navy Expo',              icon:'⚓', cat:'Exhibition',  team:false, maxTeam:0, price:0,   desc:'Explore advanced naval technologies.',               day:'Day 1' },
+    { id:'ship-model-d1',      name:'Ship Model Expo',               icon:'🚢', cat:'Exhibition',  team:false, maxTeam:0, price:0,   desc:'View stunning scale ship models.',                   day:'Day 1' },
+];
+
+let selectedEvent = null;
+let teammates = [];
+let currentRegId = null;
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+    loadOfferAndEvents();
+    renderEventGrid();
+    showSection('sectionFill', 1);
+    initNav();
+
+    // ── Auto-select event from URL param ──
+    // Supports: register.html?event=EVENT_ID
+    const params = new URLSearchParams(window.location.search);
+    const eventParam = params.get('event');
+    if (eventParam) {
+        // Try to select immediately (events may already be rendered)
+        const found = tryAutoSelectEvent(eventParam);
+        // If not found yet (could be loaded from API), store for later
+        if (!found) window._pendingEventParam = eventParam;
+    }
+});
+
+// Try to auto-select an event by id. Returns true if found.
+function tryAutoSelectEvent(id) {
+    const ev = EVENTS.find(e => e.id === id);
+    if (!ev) return false;
+    selectEvent(id);
+    // Show the preselected banner
+    document.getElementById('preselectedBanner').classList.add('show');
+    document.getElementById('preselectedName').textContent = ev.name;
+    document.getElementById('preselectedIcon').textContent = ev.icon || '🎯';
+    // Hide the full event grid (user already knows what they want)
+    document.getElementById('eventGrid').style.display = 'none';
+    // Scroll to form top after brief delay
+    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+    return true;
+}
+
+// Show all events again (user wants to change)
+function showAllEvents() {
+    document.getElementById('preselectedBanner').classList.remove('show');
+    document.getElementById('eventGrid').style.display = '';
+    // Clear selection
+    selectedEvent = null;
+    teammates = [];
+    document.querySelectorAll('.event-card-select').forEach(c => c.classList.remove('selected'));
+    document.getElementById('teamSection').classList.remove('visible');
+    document.getElementById('teammateList').innerHTML = '';
+}
+
+async function loadOfferAndEvents() {
+    try {
+        const res = await fetch('/api/public/config');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.offer && data.offer.text) {
+            document.getElementById('offerText').textContent = data.offer.text;
+            document.getElementById('offerBanner').classList.remove('hidden');
+        }
+        if (data.events && data.events.length) {
+            EVENTS = data.events;
+            renderEventGrid();
+        }
+    } catch(e) {
+        // Silently fallback to hardcoded events
+    }
+}
+
+function renderEventGrid() {
+    const grid = document.getElementById('eventGrid');
+    grid.innerHTML = EVENTS.map(ev => `
+        <div class="event-card-select" data-id="${ev.id}" onclick="selectEvent('${ev.id}')">
+            <input type="radio" name="event" value="${ev.id}">
+            <div class="ev-select-badge">${ev.cat}</div>
+            <div class="ev-select-icon">${ev.icon}</div>
+            <div class="ev-select-name">${ev.name}</div>
+            <div class="ev-select-meta">${ev.day} · ${ev.team ? `Team up to ${ev.maxTeam+1}` : 'Solo'}</div>
+            <div class="ev-price-tag">${ev.price === 0 ? 'FREE' : '&#8377;' + ev.price}</div>
+        </div>
+    `).join('');
+    // If a pending event param is waiting (API loaded after first render), auto-select now
+    if (window._pendingEventParam) {
+        tryAutoSelectEvent(window._pendingEventParam);
+        window._pendingEventParam = null;
+    }
+}
+
+function selectEvent(id) {
+    document.querySelectorAll('.event-card-select').forEach(c => c.classList.remove('selected'));
+    document.querySelector(`[data-id="${id}"]`)?.classList.add('selected');
+    selectedEvent = EVENTS.find(e => e.id === id);
+    document.getElementById('eventError').style.display = 'none';
+
+    // Team section
+    teammates = [];
+    const teamSec = document.getElementById('teamSection');
+    if (selectedEvent && selectedEvent.team && selectedEvent.maxTeam > 0) {
+        teamSec.classList.add('visible');
+        document.getElementById('teamHint').textContent =
+            `Add up to ${selectedEvent.maxTeam} teammates. One QR code will be sent to you (team leader).`;
+        renderTeammates();
+    } else {
+        teamSec.classList.remove('visible');
+        document.getElementById('teammateList').innerHTML = '';
+    }
+}
+
+// ══════════════════════════════════════════════
+//  TEAMMATES
+// ══════════════════════════════════════════════
+function addTeammate() {
+    if (!selectedEvent) return;
+    if (teammates.length >= selectedEvent.maxTeam) {
+        alert(`Maximum ${selectedEvent.maxTeam} teammates allowed for this event.`);
+        return;
+    }
+    teammates.push({ name: '', email: '' });
+    renderTeammates();
+}
+
+function removeTeammate(idx) {
+    teammates.splice(idx, 1);
+    renderTeammates();
+}
+
+function renderTeammates() {
+    const list = document.getElementById('teammateList');
+    list.innerHTML = teammates.map((tm, i) => `
+        <div class="teammate-row">
+            <div class="form-group" style="margin-bottom:0;">
+                <label>Teammate ${i+1} Name <span class="req">*</span></label>
+                <input type="text" class="form-control tm-name" data-idx="${i}" value="${tm.name}" placeholder="Full name" oninput="updateTeammate(${i},'name',this.value)">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+                <label>Teammate ${i+1} Email <span class="req">*</span></label>
+                <input type="email" class="form-control tm-email" data-idx="${i}" value="${tm.email}" placeholder="email@example.com" oninput="updateTeammate(${i},'email',this.value)">
+            </div>
+            <button class="btn-ghost danger" onclick="removeTeammate(${i})" style="padding:12px;">✕</button>
+        </div>
+    `).join('');
+}
+
+function updateTeammate(idx, field, val) {
+    teammates[idx][field] = val;
+}
+
+// ══════════════════════════════════════════════
+//  VALIDATION
+// ══════════════════════════════════════════════
+function setError(id, hasErr) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (hasErr) el.classList.add('error'); else el.classList.remove('error');
+}
+
+function validateFill() {
+    let ok = true;
+    const name  = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const col   = document.getElementById('regCollege').value.trim();
+    const dept  = document.getElementById('regDept').value.trim();
+    const year  = document.getElementById('regYear').value;
+
+    if (!name)               { setError('regName',true); ok=false; } else setError('regName',false);
+    if (!/\S+@\S+\.\S+/.test(email)) { setError('regEmail',true); ok=false; } else setError('regEmail',false);
+    if (!phone || phone.replace(/\D/g,'').length < 10) { setError('regPhone',true); ok=false; } else setError('regPhone',false);
+    if (!col)                { setError('regCollege',true); ok=false; } else setError('regCollege',false);
+    if (!dept)               { setError('regDept',true); ok=false; } else setError('regDept',false);
+    if (!year)               { setError('regYear',true); ok=false; } else setError('regYear',false);
+    if (!selectedEvent)      { document.getElementById('eventError').style.display='block'; ok=false; }
+
+    // Validate teammates
+    if (selectedEvent && selectedEvent.team) {
+        for (let i=0;i<teammates.length;i++) {
+            if (!teammates[i].name.trim() || !teammates[i].email.trim()) {
+                showError('Please fill in all teammate names and emails, or remove the empty rows.');
+                return false;
+            }
+        }
+    }
+    return ok;
+}
+
+// ══════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════
+function showSection(id, step) {
+    document.querySelectorAll('[id^="section"]').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    // Steps
+    [1,2,3].forEach(s => {
+        const el = document.getElementById('step'+s);
+        el.classList.remove('active','done');
+        if (s < step) el.classList.add('done');
+        else if (s === step) el.classList.add('active');
+    });
+}
+
+function goToConfirm() {
+    if (!validateFill()) { window.scrollTo({top:300,behavior:'smooth'}); return; }
+    buildConfirmBox();
+    showSection('sectionConfirm', 2);
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goBack() {
+    showSection('sectionFill', 1);
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildConfirmBox() {
+    const name    = document.getElementById('regName').value.trim();
+    const email   = document.getElementById('regEmail').value.trim();
+    const phone   = document.getElementById('regPhone').value.trim();
+    const college = document.getElementById('regCollege').value.trim();
+    const dept    = document.getElementById('regDept').value.trim();
+    const year    = document.getElementById('regYear').value;
+    const ev      = selectedEvent;
+
+    const rows = [
+        ['NAME',    name],
+        ['EMAIL',   email],
+        ['PHONE',   phone],
+        ['COLLEGE', college],
+        ['DEPT',    dept],
+        ['YEAR',    year],
+        ['EVENT',   ev.name],
+        ['FORMAT',  ev.team ? `Team (up to ${ev.maxTeam+1} members)` : 'Solo'],
+    ];
+    if (teammates.length > 0) {
+        teammates.forEach((tm,i) => rows.push([`TEAMMATE ${i+1}`, `${tm.name} — ${tm.email}`]));
+    }
+
+    document.getElementById('confirmBox').innerHTML = rows.map(([k,v]) => `
+        <div class="confirm-row">
+            <span class="confirm-key">${k}</span>
+            <span class="confirm-val ${k==='EVENT'?'highlight':''}">${v}</span>
+        </div>
+    `).join('');
+
+    document.getElementById('amountDisplay2').textContent = ev.price === 0 ? 'FREE' : '₹' + ev.price;
+    document.getElementById('amountNote').textContent = ev.price === 0 ? 'No registration fee' : 'Includes all event materials';
+}
+
+// ══════════════════════════════════════════════
+//  PAYMENT FLOW
+// ══════════════════════════════════════════════
+async function initiatePayment() {
+    const name    = document.getElementById('regName').value.trim();
+    const email   = document.getElementById('regEmail').value.trim();
+    const phone   = document.getElementById('regPhone').value.trim();
+    const college = document.getElementById('regCollege').value.trim();
+    const dept    = document.getElementById('regDept').value.trim();
+    const year    = document.getElementById('regYear').value;
+    const ev      = selectedEvent;
+
+    showSection('sectionPaying', 3);
+    document.getElementById('payingTitle').textContent = 'CREATING ORDER…';
+    document.getElementById('payingSub').textContent = 'Please wait while we set up your registration.';
+    window.scrollTo({top:0,behavior:'smooth'});
+
+    let orderData;
+    try {
+        const res = await fetch('/api/create-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name, email, phone, college,
+                department: dept, year,
+                event: ev.id,
+                event_name: ev.name,
+                package: ev.cat,
+                amount: ev.price,
+                teammates: teammates,
+            })
+        });
+        orderData = await res.json();
+        if (!res.ok) throw new Error(orderData.error || 'Order creation failed');
+    } catch(e) {
+        showSection('sectionConfirm', 2);
+        showError(e.message);
+        return;
+    }
+
+    currentRegId = orderData.registration_id;
+
+    // Free event — skip Razorpay
+    if (ev.price === 0) {
+        await handleFreeRegistration(orderData);
+        return;
+    }
+
+    document.getElementById('payingTitle').textContent = 'OPENING PAYMENT GATEWAY';
+    document.getElementById('payingSub').textContent = 'Razorpay checkout will open shortly…';
+
+    const options = {
+        key:           orderData.razorpay_key,
+        amount:        ev.price * 100,
+        currency:      'INR',
+        name:          'Anchorage 2026',
+        description:   `Registration: ${ev.name}`,
+        image:         'static/logo1.png',
+        order_id:      orderData.order_id,
+        prefill:       { name, email, contact: phone },
+        theme:         { color: '#00f2ff' },
+        modal:         { backdropclose: false },
+        handler: async function(response) {
+            document.getElementById('payingTitle').textContent = 'VERIFYING PAYMENT…';
+            document.getElementById('payingSub').textContent = 'Please do not close this window.';
+            await verifyPayment(response, orderData.registration_id);
+        },
+        'modal.ondismiss': function() {
+            showSection('sectionConfirm', 2);
+            showError('Payment was cancelled. You can try again.');
+        }
+    };
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function(response) {
+        showSection('sectionConfirm', 2);
+        showError('Payment failed: ' + (response.error.description || 'Please try again.'));
+    });
+    rzp.open();
+}
+
+async function handleFreeRegistration(orderData) {
+    try {
+        const res = await fetch('/api/free-register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ registration_id: orderData.registration_id })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Registration failed');
+        showSuccess(orderData.registration_id, true);
+    } catch(e) {
+        showSection('sectionConfirm', 2);
+        showError(e.message);
+    }
+}
+
+async function verifyPayment(rzpResponse, regId) {
+    try {
+        const res = await fetch('/api/verify-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                razorpay_payment_id: rzpResponse.razorpay_payment_id,
+                razorpay_order_id:   rzpResponse.razorpay_order_id,
+                razorpay_signature:  rzpResponse.razorpay_signature,
+                registration_id:     regId,
+            })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Verification failed');
+        showSuccess(regId, false);
+    } catch(e) {
+        showSection('sectionConfirm', 2);
+        showError('Payment was received but verification failed. Please contact us with your payment ID.');
+    }
+}
+
+// ══════════════════════════════════════════════
+//  MODALS
+// ══════════════════════════════════════════════
+function showSuccess(regId, free) {
+    const shortId = regId.substring(0, 8).toUpperCase();
+    document.getElementById('successText').textContent = free
+        ? `Your registration for ${selectedEvent.name} is confirmed! Check your email for confirmation.`
+        : `Payment successful! Your ticket with QR code has been sent to your registered email. Please check your inbox (and spam folder).`;
+    document.getElementById('successRegId').textContent = `Registration ID: ${shortId}`;
+    document.getElementById('successModal').classList.add('visible');
+}
+
+function showError(msg) {
+    document.getElementById('errorText').textContent = msg;
+    document.getElementById('errorModal').classList.add('visible');
+}
+
+// ══════════════════════════════════════════════
+//  NAV
+// ══════════════════════════════════════════════
+function initNav() {
+    document.getElementById('hamburger').addEventListener('click', function() {
+        this.classList.toggle('open');
+        document.getElementById('mobileMenu').classList.toggle('open');
+    });
+    document.querySelectorAll('.mobile-menu-link').forEach(l => {
+        l.addEventListener('click', () => {
+            document.getElementById('hamburger').classList.remove('open');
+            document.getElementById('mobileMenu').classList.remove('open');
+        });
+    });
+}
+</script>
+</body>
+</html>
