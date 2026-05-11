@@ -1029,149 +1029,6 @@
             .proshow-image-panel:hover img { transform: none; }
         }
 
-        /* ====== IPL CONTEST SECTION ====== */
-        #contest { padding: 80px 0; }
-
-        .contest-wrapper {
-            background: linear-gradient(135deg, rgba(0,8,18,0.95) 0%, rgba(0,15,25,0.9) 100%);
-            border: 1px solid var(--border-glow);
-            position: relative; overflow: hidden;
-            animation: glow-pulse 5s ease-in-out infinite;
-        }
-        .contest-topbar {
-            width: 100%; height: 3px;
-            background: linear-gradient(90deg, transparent 0%, var(--neon-cyan) 30%, rgba(0,242,255,0.4) 70%, transparent 100%);
-        }
-        .contest-corner { position: absolute; width: 28px; height: 28px; z-index: 2; }
-        .contest-corner.tl { top: 3px; left: 0;   border-top: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); }
-        .contest-corner.tr { top: 3px; right: 0;  border-top: 2px solid var(--neon-cyan); border-right: 2px solid var(--neon-cyan); }
-        .contest-corner.bl { bottom: 0; left: 0;  border-bottom: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); }
-        .contest-corner.br { bottom: 0; right: 0; border-bottom: 2px solid var(--neon-cyan); border-right: 2px solid var(--neon-cyan); }
-        .contest-dots {
-            position: absolute; inset: 3px 0 0 0;
-            background-image: radial-gradient(rgba(0,242,255,0.05) 1px, transparent 1px);
-            background-size: 28px 28px; pointer-events: none;
-        }
-        .contest-scan {
-            position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(0,242,255,0.6), transparent);
-            animation: vscan 5s linear infinite; pointer-events: none; z-index: 1;
-        }
-
-        .contest-inner {
-            display: grid; grid-template-columns: 1fr 1fr;
-            position: relative; z-index: 2; min-height: 340px;
-        }
-
-        /* Left — info panel */
-        .contest-info {
-            padding: 52px 48px 52px 52px;
-            display: flex; flex-direction: column; justify-content: center; gap: 0;
-            border-right: 1px solid rgba(0,242,255,0.1);
-        }
-        .contest-badge { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-        .contest-badge-line { width: 36px; height: 1px; background: var(--neon-cyan); flex-shrink: 0; }
-        .contest-badge-text { font-family: 'Orbitron', sans-serif; font-size: 0.6rem; color: var(--neon-cyan); letter-spacing: 6px; opacity: 0.8; }
-
-        .contest-heading {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(3rem, 5vw, 4.5rem); line-height: 0.9; letter-spacing: 3px;
-            color: white; text-transform: uppercase; margin-bottom: 6px;
-        }
-        .contest-heading-accent {
-            display: block; font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(1.8rem, 3vw, 2.8rem); line-height: 1.1; letter-spacing: 5px;
-            color: transparent; -webkit-text-stroke: 1px var(--neon-cyan);
-        }
-        .contest-tagline {
-            margin: 22px 0 26px; padding: 16px 20px;
-            border-left: 3px solid var(--neon-cyan);
-            background: linear-gradient(90deg, rgba(0,242,255,0.07), transparent);
-            position: relative; overflow: hidden;
-        }
-        .contest-tagline::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(0,242,255,0.1), transparent);
-            transform: translateX(-100%); animation: shimmer 4s infinite 1s;
-        }
-        @keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
-        .contest-tagline p { font-size: 0.9rem; letter-spacing: 1.5px; line-height: 1.7; opacity: 0.85; }
-
-        .contest-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
-        .contest-stat-card {
-            padding: 14px 16px; background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(0,242,255,0.12);
-            border-top: 2px solid rgba(0,242,255,0.4);
-            transition: border-color 0.3s;
-        }
-        .contest-stat-card:hover { border-color: var(--neon-cyan); }
-        .contest-stat-label { font-family: 'Orbitron', sans-serif; font-size: 0.45rem; letter-spacing: 3px; color: var(--neon-cyan); opacity: 0.55; margin-bottom: 6px; }
-        .contest-stat-val   { font-family: 'Orbitron', sans-serif; font-size: 0.95rem; color: white; }
-
-        .contest-cta {
-            display: inline-flex; align-items: center; gap: 14px; padding: 16px 36px;
-            color: var(--neon-cyan); text-decoration: none;
-            font-family: 'Orbitron', sans-serif; font-size: 0.72rem; letter-spacing: 3px;
-            border: 1px solid var(--neon-cyan); background: rgba(0,242,255,0.05);
-            clip-path: polygon(0 0, 88% 0, 100% 50%, 88% 100%, 0 100%, 12% 50%);
-            transition: all 0.4s var(--expo-easing);
-            -webkit-tap-highlight-color: transparent; align-self: flex-start;
-        }
-        .contest-cta:hover { background: var(--neon-cyan); color: black; box-shadow: 0 0 40px rgba(0,242,255,0.5); transform: translateX(6px); }
-        .contest-cta:active { background: var(--neon-cyan); color: black; }
-        .contest-cta-arrow { font-size: 1rem; transition: transform 0.3s ease; }
-        .contest-cta:hover .contest-cta-arrow { transform: translateX(4px); }
-
-        /* Right — team preview panel */
-        .contest-teams {
-            padding: 52px 40px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
-        }
-        .contest-teams-label {
-            font-family: 'Orbitron', sans-serif; font-size: 0.5rem;
-            letter-spacing: 5px; color: var(--neon-cyan); opacity: 0.55;
-        }
-        .contest-teams-row {
-            display: flex; align-items: center; gap: 20px; width: 100%; justify-content: center;
-        }
-        .contest-team-card {
-            flex: 1; max-width: 160px;
-            background: rgba(0,0,0,0.5); border: 1px solid rgba(0,242,255,0.15);
-            padding: 24px 16px; display: flex; flex-direction: column; align-items: center; gap: 12px;
-            clip-path: polygon(0 0,100% 0,100% 82%,88% 100%,0 100%);
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-        .contest-team-card:hover { border-color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0,242,255,0.1); }
-        .contest-team-logo {
-            width: 72px; height: 72px; border-radius: 50%; overflow: hidden;
-            border: 2px solid rgba(0,242,255,0.2); background: rgba(0,0,0,0.4);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .contest-team-logo img { width: 100%; height: 100%; object-fit: contain; }
-        .contest-team-logo .fallback { font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; color: var(--neon-cyan); }
-        .contest-team-name { font-family: 'Orbitron', sans-serif; font-size: 0.55rem; letter-spacing: 2px; color: white; text-align: center; line-height: 1.4; }
-        .contest-team-abbr { font-size: 0.45rem; letter-spacing: 3px; color: var(--neon-cyan); opacity: 0.6; }
-
-        .contest-vs {
-            font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 6px;
-            color: rgba(0,242,255,0.25); flex-shrink: 0;
-        }
-        .contest-tba {
-            font-family: 'Orbitron', sans-serif; font-size: 0.55rem; letter-spacing: 4px;
-            color: rgba(0,242,255,0.4); text-align: center; padding: 12px 20px;
-            border: 1px solid rgba(0,242,255,0.12);
-            animation: glow-pulse 3s ease-in-out infinite;
-        }
-
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
-            #contest { padding: 40px 0; }
-            .contest-inner { grid-template-columns: 1fr; }
-            .contest-info { padding: 32px 22px; border-right: none; border-bottom: 1px solid rgba(0,242,255,0.1); }
-            .contest-teams { padding: 32px 22px; }
-            .contest-cta { clip-path: none; align-self: stretch; justify-content: center; }
-        }
-
         @media (max-width: 480px) {
             #load-title { font-size: 2rem; }
             #status-msg { font-size: 0.65rem; }
@@ -1209,7 +1066,6 @@
         <a href="index.html" class="mobile-menu-link" onclick="closeMobileMenu()">HOME</a>
         <a href="coming-soon.html" class="mobile-menu-link" onclick="closeMobileMenu()">EVENTS</a>
         <a href="#hub"        class="mobile-menu-link" onclick="closeMobileMenu()">HUB</a>
-        <a href="#contest"    class="mobile-menu-link" onclick="closeMobileMenu()">CONTEST</a>
         <a href="#sponsors"   class="mobile-menu-link" onclick="closeMobileMenu()">PARTNERS</a>
         <a href="coming-soon.html"  class="mobile-menu-link" onclick="closeMobileMenu()">ABOUT</a>
         <a href="coming-soon.html" class="mobile-register-btn" onclick="closeMobileMenu()">REGISTER</a>
@@ -1225,7 +1081,6 @@
                 <a href="index.html"    class="nav-link">Home</a>
                 <a href="coming-soon.html"   class="nav-link">Events</a>
                 <a href="#hub"          class="nav-link">Hub</a>
-                <a href="#contest"      class="nav-link">Contest</a>
                 <a href="#sponsors"     class="nav-link">Partners</a>
                 <a href="coming-soon.html"    class="nav-link">About</a>
             </div>
@@ -1253,7 +1108,7 @@
                 </div>
                 <p class="hero-desc">Experience the ultimate maritime technical symposium hosted by the Department of Ship Technology, CUSAT.</p>
                 <a href="coming-soon.html" class="btn-hex">INITIALIZE REGISTRATION</a>
-                <a href="#contest" class="btn-hex" style="margin-left:14px; background:transparent; border-color:rgba(0,242,255,0.4); color:rgba(0,242,255,0.7);">JOIN IPL CONTEST</a>
+                <a href="ipl.html" class="btn-hex" style="margin-left:14px; background:transparent; border-color:rgba(0,242,255,0.4); color:rgba(0,242,255,0.7);">JOIN IPL CONTEST</a>
             </div>
         </section>
 
@@ -1399,73 +1254,6 @@
             </div>
         </section>
 
-        <!-- IPL CONTEST -->
-        <section id="contest">
-            <div class="container">
-                <div class="contest-wrapper">
-                    <div class="contest-topbar"></div>
-                    <div class="contest-corner tl"></div>
-                    <div class="contest-corner tr"></div>
-                    <div class="contest-corner bl"></div>
-                    <div class="contest-corner br"></div>
-                    <div class="contest-dots"></div>
-                    <div class="contest-scan"></div>
-
-                    <div class="contest-inner">
-
-                        <!-- Left: info -->
-                        <div class="contest-info reveal-left">
-                            <div class="contest-badge">
-                                <div class="contest-badge-line"></div>
-                                <span class="contest-badge-text">ANCHORAGE · SPECIAL EVENT</span>
-                            </div>
-                            <div class="contest-heading">
-                                IPL FINAL
-                                <span class="contest-heading-accent">2026 PREDICTION</span>
-                            </div>
-                            <div class="contest-tagline">
-                                <p>Think you know cricket best? Predict the IPL Final 2026 winner, climb the leaderboard and take home exciting prizes!</p>
-                            </div>
-                            <div class="contest-stats">
-                                <div class="contest-stat-card">
-                                    <div class="contest-stat-label">FINAL DATE</div>
-                                    <div class="contest-stat-val">31 MAY 2026</div>
-                                </div>
-                                <div class="contest-stat-card">
-                                    <div class="contest-stat-label">VENUE</div>
-                                    <div class="contest-stat-val">Narendra Modi Stadium</div>
-                                </div>
-                                <div class="contest-stat-card">
-                                    <div class="contest-stat-label">ENTRY</div>
-                                    <div class="contest-stat-val">FREE</div>
-                                </div>
-                                <div class="contest-stat-card">
-                                    <div class="contest-stat-label">PRIZES</div>
-                                    <div class="contest-stat-val">Exciting Rewards</div>
-                                </div>
-                            </div>
-                            <a href="register.html" class="contest-cta">
-                                JOIN THE CONTEST
-                                <span class="contest-cta-arrow">→</span>
-                            </a>
-                        </div>
-
-                        <!-- Right: teams -->
-                        <div class="contest-teams reveal-right">
-                            <div class="contest-teams-label">◈ &nbsp; IPL FINAL FINALISTS &nbsp; ◈</div>
-                            <div class="contest-teams-row" id="contestTeamsRow">
-                                <!-- Injected by JS -->
-                            </div>
-                            <div class="contest-tba" id="contestTba">
-                                ◈ &nbsp; FINALISTS TO BE CONFIRMED &nbsp; ◈
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- SPONSORS -->
         <section id="sponsors">
             <p class="sponsors-title">STRATEGIC PARTNERS</p>
@@ -1531,8 +1319,11 @@
                 </div>
                 <div class="footer-bottom">
                     <div>© 2026 ANCHORAGE. ALL SYSTEMS OPERATIONAL.</div>
-                    <div><a href="privacy-policy.html" style="color:inherit; text-decoration:none; opacity:0.7; transition:opacity 0.3s;" onmouseover="this.style.opacity='1';this.style.color='var(--neon-cyan)'" onmouseout="this.style.opacity='0.7';this.style.color='inherit'">PRIVACY POLICY</a></div>
-                    <div>SNAS TECHNICAL WING</div>
+                    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center;">
+                        <a href="privacy-policy.html" style="color:inherit;text-decoration:none;opacity:1;font-family:'Orbitron';font-size:0.58rem;letter-spacing:2px;transition:color 0.3s;" onmouseover="this.style.color='var(--neon-cyan)'" onmouseout="this.style.color='inherit'">PRIVACY POLICY</a>
+                        <span style="opacity:0.3;">·</span>
+                        <div>SNAS TECHNICAL WING</div>
+                    </div>
                 </div>
             </div>
         </footer>
@@ -1877,60 +1668,6 @@
             renderTrack();
             renderDetail();
             startAuto();
-        })();
-
-        /* ================================================================
-           ▼▼▼  IPL CONTEST — EDIT THESE TWO TEAMS WHEN CONFIRMED  ▼▼▼
-           Set confirmed: true and fill name/abbr/logo when finalists known.
-        ================================================================ */
-        const IPL_FINAL_TEAMS = [
-            {
-                abbr: "TBC",
-                name: "To Be Confirmed",
-                logo: "",
-                confirmed: false,
-            },
-            {
-                abbr: "TBC",
-                name: "To Be Confirmed",
-                logo: "",
-                confirmed: false,
-            },
-        ];
-        /* ================================================================
-           ▲▲▲  END OF IPL CONTEST CONFIG  ▲▲▲
-        ================================================================ */
-
-        (function renderContestTeams() {
-            const row = document.getElementById('contestTeamsRow');
-            const tba = document.getElementById('contestTba');
-            const allConfirmed = IPL_FINAL_TEAMS.every(t => t.confirmed);
-
-            if (!allConfirmed) {
-                row.style.display = 'none';
-                tba.style.display = 'block';
-                return;
-            }
-
-            tba.style.display = 'none';
-            row.style.display = 'flex';
-            row.innerHTML = IPL_FINAL_TEAMS.map((t, i) => `
-                ${i === 1 ? `<div class="contest-vs">VS</div>` : ''}
-                ${i === 1 ? '' : ''}
-                <div class="contest-team-card">
-                    <div class="contest-team-logo">
-                        ${t.logo
-                            ? `<img src="${t.logo}" alt="${t.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><span class="fallback" style="display:none">${t.abbr}</span>`
-                            : `<span class="fallback">${t.abbr}</span>`}
-                    </div>
-                    <div class="contest-team-name">${t.name}</div>
-                    <div class="contest-team-abbr">${t.abbr}</div>
-                </div>
-            `).reduce((acc, html, i, arr) => {
-                if (i === 0) return html + `<div class="contest-vs">VS</div>` + arr[1];
-                if (i === 1) return acc;
-                return acc + html;
-            }, '');
         })();
     </script>
 </body>
