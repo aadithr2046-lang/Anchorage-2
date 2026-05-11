@@ -53,13 +53,15 @@
     .caustics {
       position: absolute; width: 200%; height: 200%; top: -50%; left: -50%;
       background: repeating-linear-gradient(45deg, transparent, transparent 5%, rgba(0,242,255,0.02) 10%, transparent 15%);
-      filter: blur(50px); animation: rays 20s infinite linear; pointer-events: none;
+      filter: blur(50px); animation: rays 40s infinite linear; pointer-events: none;
+      will-change: transform;
     }
     @keyframes rays { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
     .bubble {
       position: absolute; border-radius: 50%; bottom: -50px; pointer-events: none;
       background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3) 0%, rgba(0,242,255,0.08) 40%, rgba(255,255,255,0.03) 100%);
       border: 0.5px solid rgba(255,255,255,0.15); animation: floatUp var(--speed) infinite ease-in;
+      will-change: transform, opacity;
     }
     @keyframes floatUp { 0%{transform:translateY(0) translateX(0);opacity:0} 10%{opacity:.6} 100%{transform:translateY(-110vh) translateX(-15px);opacity:0} }
     @keyframes glow-pulse {
@@ -108,8 +110,8 @@
     .card-corner.bl { bottom:0;left:0;  border-bottom:2px solid var(--neon-cyan);border-left:2px solid var(--neon-cyan); }
     .card-corner.br { bottom:0;right:0; border-bottom:2px solid var(--neon-cyan);border-right:2px solid var(--neon-cyan); }
     .card-dots { position:absolute; inset:2px 0 0 0; background-image:radial-gradient(rgba(0,242,255,.05) 1px,transparent 1px); background-size:24px 24px; pointer-events:none; }
-    .card-scan { position:absolute; top:0;left:0;right:0;height:2px; background:linear-gradient(90deg,transparent,rgba(0,242,255,.6),transparent); animation:vscan 6s linear infinite; pointer-events:none; z-index:3; }
-    @keyframes vscan { 0%{top:0;opacity:1} 80%{opacity:.3} 100%{top:100%;opacity:0} }
+    .card-scan { position:absolute; top:0;left:0;right:0;height:2px; background:linear-gradient(90deg,transparent,rgba(0,242,255,.6),transparent); animation:vscan 8s linear infinite; pointer-events:none; z-index:3; will-change:transform; }
+    @keyframes vscan { 0%{transform:translateY(0);opacity:1} 80%{opacity:.3} 100%{transform:translateY(var(--card-h,600px));opacity:0} }
     .card-body { padding:36px 36px 40px; position:relative; z-index:1; }
 
     /* ── SECTION LABEL ── */
@@ -163,9 +165,9 @@
     .card-tick { position:absolute; top:10px; right:12px; width:20px; height:20px; border-radius:50%; border:1px solid var(--neon-cyan); background:rgba(0,242,255,.15); display:flex; align-items:center; justify-content:center; font-size:.65rem; color:var(--neon-cyan); opacity:0; transition:opacity .3s; }
 
     /* scan line */
-    .tc-scan { position:absolute; top:0;left:0;right:0;height:1px; background:linear-gradient(90deg,transparent,rgba(0,242,255,.5),transparent); animation:tc-scan 3.5s linear infinite; opacity:0; pointer-events:none; }
+    .tc-scan { position:absolute; top:0;left:0;right:0;height:1px; background:linear-gradient(90deg,transparent,rgba(0,242,255,.5),transparent); animation:tc-scan 4s linear infinite; opacity:0; pointer-events:none; will-change:transform; }
     .team-card:hover .tc-scan,.team-card.selected .tc-scan { opacity:1; }
-    @keyframes tc-scan { 0%{top:0} 100%{top:100%} }
+    @keyframes tc-scan { 0%{transform:translateY(0)} 100%{transform:translateY(200px)} }
 
     /* Logo */
     .team-logo-wrap { width:80px; height:80px; border-radius:50%; display:flex; align-items:center; justify-content:center; overflow:hidden; border:2px solid rgba(0,242,255,.2); background:rgba(0,0,0,.4); transition:border-color .3s; flex-shrink:0; }
@@ -278,9 +280,8 @@
           <div class="sec-label-line"></div>
         </div>
 
-        <div class="field-row">
-          <div class="field" id="f-fname"><label for="fname">First Name</label><input type="text" id="fname" placeholder="Rohit" autocomplete="given-name"/><span class="err-msg">Required</span></div>
-          <div class="field" id="f-lname"><label for="lname">Last Name</label><input type="text" id="lname" placeholder="Sharma" autocomplete="family-name"/><span class="err-msg">Required</span></div>
+        <div class="field-row single">
+          <div class="field" id="f-fname"><label for="fname">Full Name</label><input type="text" id="fname" placeholder="Rohit Sharma" autocomplete="name"/><span class="err-msg">Required</span></div>
         </div>
         <div class="field-row single">
           <div class="field" id="f-email"><label for="email">Email Address</label><input type="email" id="email" placeholder="you@email.com" autocomplete="email"/><span class="err-msg">Valid email required</span></div>
@@ -424,9 +425,9 @@ FINAL_TEAMS.forEach(t => {
   }
 })();
 
-/* Bubbles */
+/* Bubbles — reduced count for smooth performance */
 const bg = document.getElementById('bg-layer');
-[{s:6,l:10,sp:'12s'},{s:10,l:25,sp:'18s'},{s:4,l:40,sp:'10s'},{s:8,l:55,sp:'15s'},{s:5,l:70,sp:'13s'},{s:12,l:85,sp:'20s'}].forEach(b => {
+[{s:6,l:15,sp:'16s'},{s:9,l:50,sp:'22s'},{s:5,l:80,sp:'14s'}].forEach(b => {
   const el = document.createElement('div');
   el.className = 'bubble';
   el.style.cssText = `width:${b.s}px;height:${b.s}px;left:${b.l}%;--speed:${b.sp};animation-delay:${Math.random()*10}s`;
@@ -447,7 +448,7 @@ function validate(id, fn) {
 document.getElementById('regForm').addEventListener('submit', e => {
   e.preventDefault();
   const ok = [
-    validate('fname', notEmpty), validate('lname', notEmpty),
+    validate('fname', notEmpty),
     validate('email', isEmail),  validate('phone', notEmpty),
     validate('year',  notEmpty), validate('dept',  notEmpty),
   ].every(Boolean);
