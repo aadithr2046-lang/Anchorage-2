@@ -1,257 +1,178 @@
 """
-IPL Final 2026 — Prediction Contest
-Flask Backend  (app.py)
-
-Install:
-  pip install flask flask-cors pymysql python-dotenv
-
-Run (dev):
-  python app.py
-
-Run (prod, gunicorn):
-  gunicorn -w 4 -b 0.0.0.0:5000 app:app
+app.py — Flask backend for Anchorage 2026 IPL Prediction Contest
+Run:
+    flask run          (development)
+    gunicorn app:app   (production)
 """
 
 import os
 import re
+import logging
 from datetime import datetime, timezone
 
 import pymysql
 import pymysql.cursors
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, request, jsonify, g
 from flask_cors import CORS
 
+# ── Load .env ────────────────────────────────────────────────────────────────
 load_dotenv()
 
+# ── App setup ────────────────────────────────────────────────────────────────
 app = Flask(__name__)
-CORS(app, origins=os.getenv("ALLOWED_ORIGINS", "*"))
+CORS(app, resources={r"/api/*": {"origins": "*"}})   # tighten in production
 
-# ── CONFIG ────────────────────────────────────────────────────
+# ── Config ───────────────────────────────────────────────────────────────────
 DB_CONFIG = {
-    "host":        os.getenv("DB_HOST", "localhost"),
-    "port":        int(os.getenv("DB_PORT", 3306)),
-    "user":        os.getenv("DB_USER", "root"),
-    "password":    os.getenv("DB_PASS", ""),
-    "db":          os.getenv("DB_NAME", "ipl_contest"),
-    "charset":     "utf8mb4",
+    "host":     os.environ.get("DATABASE_HOST",     "localhost"),
+    "port":     int(os.environ.get("DATABASE_PORT", 3306)),
+    "user":     os.environ.get("DATABASE_USER",     "root"),
+    "password": os.environ.get("DATABASE_PASSWORD", ""),
+    "database": os.environ.get("DATABASE_NAME",     "anchorage_ipl"),
     "cursorclass": pymysql.cursors.DictCursor,
-    "autocommit":  True,
+    "autocommit": False,
 }
 
-# Contest closes at 2026-05-31 18:00 IST  (= 12:30 UTC)
-DEADLINE_UTC = datetime(2026, 5, 31, 12, 30, 0, tzinfo=timezone.utc)
+CONTEST_DEADLINE = datetime.fromisoformat(
+    os.environ.get("DEADLINE_UTC", "2026-05-31T12:30:00+00:00")
+).replace(tzinfo=timezone.utc)
 
-# ================================================================
-# ▼▼▼  EDIT THIS BLOCK ONLY — keep in sync with frontend FINAL_TEAMS
-#       team value = whatever abbr you set in the HTML FINAL_TEAMS array
-# ================================================================
-VALID_TEAMS = {
-    "TEAM1": "Team 1 Full Name",   # e.g. "RCB": "Royal Challengers Bengaluru"
-    "TEAM2": "Team 2 Full Name",   # e.g. "PBKS": "Punjab Kings"
-}
-# ================================================================
-# ▲▲▲  END CONFIG
-# ================================================================
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
-# ── HELPERS ──────────────────────────────────────────────────
-def get_db():
-    return pymysql.connect(**DB_CONFIG)
+# ── Database helpers ──────────────────────────────────────────────────────────
+def get_db() -> pymysql.connections.Connection:
+    """Return a per-request MySQL connection stored on Flask's g object."""
+    if "db" not in g:
+        g.db = pymysql.connect(**DB_CONFIG)
+    return g.db
 
 
-def is_valid_email(email: str) -> bool:
-    return bool(re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", email))
+@app.teardown_appcontext
+def close_db(error=None):
+    db = g.pop("db", None)
+    if db is not None:
+        db.close()
 
 
-def normalise_phone(phone: str) -> str:
-    """Strip spaces, dashes, dots so +91-98765 43210 == +919876543210."""
-    return re.sub(r"[\s\-.()\u00a0]", "", phone)
+# ── Validation helpers ────────────────────────────────────────────────────────
+_EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
+_PHONE_RE = re.compile(r"^[\d\s\+\-\(\)]{7,20}$")
 
 
-def err(msg: str, code: int = 400):
-    return jsonify({"ok": False, "error": msg}), code
+def validate_payload(data: dict) -> list:
+    errors = []
+
+    name = (data.get("name") or "").strip()
+    if not name:
+        errors.append("name is required")
+
+    email = (data.get("email") or "").strip().lower()
+    if not _EMAIL_RE.match(email):
+        errors.append("valid email is required")
+
+    phone = (data.get("phone") or "").strip()
+    if not _PHONE_RE.match(phone):
+        errors.append("valid phone number is required")
+
+    year = (data.get("year") or "").strip()
+    if not year:
+        errors.append("year of study is required")
+
+    dept = (data.get("dept") or "").strip()
+    if not dept:
+        errors.append("department is required")
+
+    team = (data.get("team") or "").strip().lower()
+    if team not in ("team1", "team2"):
+        errors.append("team must be 'team1' or 'team2'")
+
+    return errors
 
 
-# ── ROUTES ───────────────────────────────────────────────────
-
-@app.route("/")
-@app.route("/index.html")
-def index():
-    """Serve the main landing page with the 'Join IPL Contest' button."""
-    return send_from_directory("static", "index.html")
-
-
-@app.route("/register")
-@app.route("/ipl.html")
-def register_page():
-    """Serve the registration / prediction form."""
-    return send_from_directory("static", "ipl.html")
-
-
-@app.route("/api/teams", methods=["GET"])
-def get_teams():
-    """
-    GET /api/teams
-    Returns the valid team list so the frontend can optionally
-    pull it dynamically instead of hardcoding.
-    """
-    teams = [{"abbr": k, "name": v} for k, v in VALID_TEAMS.items()]
-    return jsonify({"ok": True, "teams": teams})
-
-
-@app.route("/api/register", methods=["POST"])
+# ── Routes ────────────────────────────────────────────────────────────────────
+@app.route("/api/ipl/register", methods=["POST"])
 def register():
     """
-    POST /api/register
+    POST /api/ipl/register
     Body (JSON):
-      name, email, phone, year, dept, team
+        name, email, phone, year, dept, team ("team1" | "team2")
     """
-    # ── 1. Deadline guard
-    if datetime.now(timezone.utc) >= DEADLINE_UTC:
-        return err("Contest is closed. Predictions ended on 31 May 2026 at 6 PM IST.", 403)
+    # 1. Deadline check
+    now = datetime.now(tz=timezone.utc)
+    if now >= CONTEST_DEADLINE:
+        return jsonify(success=False, message="Contest has closed. No further entries accepted."), 403
 
+    # 2. Parse JSON
     data = request.get_json(silent=True)
     if not data:
-        return err("Invalid JSON body.")
+        return jsonify(success=False, message="Invalid JSON body."), 400
 
-    # ── 2. Sanitise & validate
-    name  = str(data.get("name",  "")).strip()[:120]
-    email = str(data.get("email", "")).strip().lower()[:254]
-    phone = normalise_phone(str(data.get("phone", "")))[:20]
-    year  = str(data.get("year",  "")).strip()[:30]
-    dept  = str(data.get("dept",  "")).strip()[:120]
-    team  = str(data.get("team",  "")).strip().upper()[:10]
+    # 3. Validate
+    errors = validate_payload(data)
+    if errors:
+        return jsonify(success=False, message="; ".join(errors)), 422
 
-    if not name:
-        return err("Name is required.")
-    if not is_valid_email(email):
-        return err("A valid email address is required.")
-    if not phone:
-        return err("Phone number is required.")
-    if not year:
-        return err("Year of study is required.")
-    if not dept:
-        return err("Department is required.")
+    # 4. Normalise
+    name          = data["name"].strip()
+    email         = data["email"].strip().lower()
+    phone         = data["phone"].strip()
+    year          = data["year"].strip()
+    dept          = data["dept"].strip()
+    team          = data["team"].strip().lower()
+    registered_at = now.strftime("%Y-%m-%d %H:%M:%S")
 
-    # ── 3. Team validation — driven by VALID_TEAMS dict, not hardcoded strings
-    if team not in VALID_TEAMS:
-        return err(
-            f"Invalid team. Must be one of: {', '.join(sorted(VALID_TEAMS.keys()))}."
-        )
-
-    ip = request.headers.get("X-Forwarded-For", request.remote_addr)
-
-    # ── 4. Duplicate check — email AND phone
+    # 5. Insert
+    db = get_db()
     try:
-        conn = get_db()
-        with conn.cursor() as cur:
-            cur.execute(
-                "SELECT email, phone FROM registrations WHERE email = %s OR phone = %s LIMIT 1",
-                (email, phone),
+        with db.cursor() as cursor:
+            cursor.execute(
+                """INSERT INTO registrations (name, email, phone, year, dept, team, registered_at)
+                   VALUES (%s, %s, %s, %s, %s, %s, %s)""",
+                (name, email, phone, year, dept, team, registered_at),
             )
-            existing = cur.fetchone()
+        db.commit()
+        logger.info("Registered: %s → %s", email, team)
+    except pymysql.err.IntegrityError:
+        db.rollback()
+        return jsonify(success=False, message="This email address is already registered."), 409
+    except Exception as e:
+        db.rollback()
+        logger.error("DB error: %s", e)
+        return jsonify(success=False, message="Database error. Please try again."), 500
 
-        if existing:
-            conn.close()
-            if existing["email"] == email:
-                return err("This email address has already been registered.", 409)
-            if existing["phone"] == phone:
-                return err("This phone number has already been registered.", 409)
-
-    except Exception as exc:
-        app.logger.error("DB duplicate-check error: %s", exc)
-        return err("Database error. Please try again.", 500)
-
-    # ── 5. Insert — store full team name alongside abbr for readability
-    team_name = VALID_TEAMS[team]
-    try:
-        with conn.cursor() as cur:
-            cur.execute(
-                """
-                INSERT INTO registrations
-                  (name, email, phone, year, dept, team, team_name, ip_address)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                """,
-                (name, email, phone, year, dept, team, team_name, ip),
-            )
-        conn.close()
-
-    except pymysql.err.IntegrityError as exc:
-        msg = str(exc).lower()
-        if "uq_phone" in msg or "'phone'" in msg:
-            return err("This phone number has already been registered.", 409)
-        return err("This email address has already been registered.", 409)
-
-    except Exception as exc:
-        app.logger.error("DB insert error: %s", exc)
-        return err("Database error. Please try again.", 500)
-
-    return jsonify({
-        "ok":       True,
-        "message":  "Prediction locked! Good luck.",
-        "team":     team,
-        "teamName": team_name,
-    }), 201
+    return jsonify(success=True, message="Prediction recorded!"), 201
 
 
-@app.route("/api/results", methods=["GET"])
+@app.route("/api/ipl/results", methods=["GET"])
 def results():
-    """GET /api/results — vote tally per team."""
-    try:
-        conn = get_db()
-        with conn.cursor() as cur:
-            cur.execute(
-                """
-                SELECT team, team_name, COUNT(*) AS votes
-                FROM registrations
-                GROUP BY team, team_name
-                ORDER BY votes DESC
-                """
-            )
-            rows = cur.fetchall()
-        conn.close()
-    except Exception as exc:
-        app.logger.error("DB error: %s", exc)
-        return err("Could not fetch results.", 500)
-
-    return jsonify({"ok": True, "results": rows})
+    """GET /api/ipl/results — vote counts per team."""
+    db = get_db()
+    with db.cursor() as cursor:
+        cursor.execute("SELECT team, COUNT(*) AS votes FROM registrations GROUP BY team")
+        rows = cursor.fetchall()
+    return jsonify(success=True, results={row["team"]: row["votes"] for row in rows})
 
 
-@app.route("/api/admin/entries", methods=["GET"])
-def admin_entries():
-    """GET /api/admin/entries?secret=YOUR_SECRET — full export."""
-    secret = os.getenv("ADMIN_SECRET", "changeme")
-    if request.args.get("secret") != secret:
-        return err("Forbidden.", 403)
-
-    try:
-        conn = get_db()
-        with conn.cursor() as cur:
-            cur.execute(
-                """
-                SELECT id, name, email, phone, year, dept,
-                       team, team_name, created_at
-                FROM registrations
-                ORDER BY created_at DESC
-                """
-            )
-            rows = cur.fetchall()
-        conn.close()
-        for r in rows:
-            if isinstance(r.get("created_at"), datetime):
-                r["created_at"] = r["created_at"].isoformat()
-    except Exception as exc:
-        app.logger.error("DB error: %s", exc)
-        return err("Could not fetch entries.", 500)
-
-    return jsonify({"ok": True, "count": len(rows), "entries": rows})
+@app.route("/api/ipl/entries", methods=["GET"])
+def entries():
+    """GET /api/ipl/entries — all registrations. ADMIN USE ONLY."""
+    db = get_db()
+    with db.cursor() as cursor:
+        cursor.execute(
+            "SELECT id, name, email, phone, year, dept, team, registered_at FROM registrations ORDER BY id"
+        )
+        rows = cursor.fetchall()
+    return jsonify(success=True, entries=rows)
 
 
-# ── RUN ──────────────────────────────────────────────────────
+@app.route("/health", methods=["GET"])
+def health():
+    return jsonify(status="ok"), 200
+
+
+# ── Entry point ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    app.run(
-        host="0.0.0.0",
-        port=int(os.getenv("PORT", 5000)),
-        debug=os.getenv("FLASK_DEBUG", "false").lower() == "true",
-    )
+    app.run(debug=True, port=5000)
