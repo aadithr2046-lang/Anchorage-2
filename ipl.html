@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IPL Prediction | Anchorage 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===================================================================
+       ▼▼▼  TEAM CONFIG — Edit ONLY this block to change teams  ▼▼▼
+       team1Logo / team2Logo: path to image file (e.g. "assets/rcb.png")
+          or any direct URL.  Use "" to show abbreviation as fallback.
+       No backend change needed — backend always receives "team1" / "team2".
+    =================================================================== */
+    :root {
+      --team1-name:   "Royal Challengers Bengaluru";
+      --team1-abbr:   "RCB";
+      --team1-logo:   "https://upload.wikimedia.org/wikipedia/en/2/2a/Royal_Challengers_Bangalore_2020.svg";
+
+      --team2-name:   "Punjab Kings";
+      --team2-abbr:   "PBKS";
+      --team2-logo:   "https://upload.wikimedia.org/wikipedia/en/d/d4/Punjab_Kings_Logo.svg";
+    }
+    /* ===================================================================
+       ▲▲▲  END TEAM CONFIG  ▲▲▲
+    =================================================================== */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cyan:        #00e5ff;
+      --cyan-faint:  rgba(0,229,255,0.10);
+      --bg:          #000810;
+      --surface:     rgba(0,12,24,0.96);
+      --border:      rgba(0,229,255,0.20);
+      --border-dim:  rgba(0,229,255,0.10);
+      --text:        #dff1f5;
+      --muted:       rgba(223,241,245,0.45);
+      --danger:      #ff4d6d;
+      --pad:         clamp(14px, 4vw, 36px);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: #000810;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.035) 1px, transparent 1px);
+      background-size: 80px 80px;
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: #00050c;
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px var(--pad);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand { display: flex; flex-direction: column; gap: 2px; }
+    .nav-brand-sub  { font-family: 'Orbitron', sans-serif; font-size: .45rem; letter-spacing: 4px; color: var(--cyan); opacity: .55; }
+    .nav-brand-main { font-family: 'Orbitron', sans-serif; font-size: .75rem; letter-spacing: 4px; color: #fff; }
+    .nav-back {
+      font-family: 'Orbitron', sans-serif; font-size: .58rem; letter-spacing: 3px;
+      text-decoration: none; color: var(--muted);
+      border: 1px solid var(--border); padding: 7px 18px;
+      transition: color .2s, border-color .2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .nav-back:hover { color: var(--cyan); border-color: var(--cyan); }
+
+    /* ── PAGE ── */
+    .page-wrap {
+      min-height: 100vh;
+      padding: 48px var(--pad) 72px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    /* ── HEADER ── */
+    .page-header { text-align: center; margin-bottom: 40px; }
+    .hdr-badge { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .hdr-badge-line { width: 32px; height: 1px; background: var(--cyan); }
+    .hdr-badge-text { font-family: 'Orbitron', sans-serif; font-size: .5rem; color: var(--cyan); letter-spacing: 5px; opacity: .7; }
+    .hdr-tagline { font-family: 'Orbitron', sans-serif; font-size: .6rem; letter-spacing: 7px; color: var(--cyan); opacity: .6; display: block; margin-bottom: 6px; }
+    .hdr-main-title { font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 7vw, 3.8rem); letter-spacing: 4px; color: #fff; }
+    .hdr-main-title span { color: var(--cyan); }
+    .hdr-line { width: 100px; height: 1px; margin: 12px auto 0; background: linear-gradient(90deg, transparent, var(--cyan), transparent); }
+
+    /* ── FORM CARD ── */
+    .form-card {
+      width: 100%; max-width: 540px;
+      background: #00090f;
+      border: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .card-topbar { width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--cyan) 40%, rgba(0,229,255,.3) 70%, transparent); }
+    .card-corner { position: absolute; width: 18px; height: 18px; }
+    .card-corner.tl { top: 2px; left: 0;    border-top:    1px solid var(--cyan); border-left:   1px solid var(--cyan); }
+    .card-corner.tr { top: 2px; right: 0;   border-top:    1px solid var(--cyan); border-right:  1px solid var(--cyan); }
+    .card-corner.bl { bottom: 0; left: 0;   border-bottom: 1px solid var(--cyan); border-left:   1px solid var(--cyan); }
+    .card-corner.br { bottom: 0; right: 0;  border-bottom: 1px solid var(--cyan); border-right:  1px solid var(--cyan); }
+    .card-body { padding: 32px 28px 36px; position: relative; z-index: 1; }
+
+    /* ── SECTION LABEL ── */
+    .sec-label { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .sec-label-line { width: 24px; height: 1px; background: var(--cyan); }
+    .sec-label-text { font-family: 'Orbitron', sans-serif; font-size: .5rem; color: var(--cyan); letter-spacing: 5px; opacity: .75; }
+
+    /* ── FIELDS ── */
+    .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+    label {
+      font-family: 'Orbitron', sans-serif; font-size: .46rem;
+      letter-spacing: 3px; color: var(--cyan); opacity: .65; text-transform: uppercase;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select {
+      background: #020f1a;
+      border: 1px solid var(--border-dim);
+      border-top: 1px solid var(--border);
+      padding: 11px 13px;
+      color: #fff;
+      font-family: 'Rajdhani', sans-serif; font-size: .95rem; font-weight: 500; letter-spacing: .5px;
+      outline: none;
+      transition: border-color .2s;
+      width: 100%;
+      -webkit-appearance: none;
+    }
+    input::placeholder { color: rgba(255,255,255,.2); }
+    input:focus, select:focus { border-color: var(--cyan); }
+    select { cursor: pointer; }
+    select option { background: #000d1a; color: #fff; }
+
+    .field.err input,
+    .field.err select { border-color: var(--danger); }
+    .err-msg { font-size: .58rem; letter-spacing: 1px; color: var(--danger); opacity: 0; transition: opacity .15s; min-height: .9em; }
+    .field.err .err-msg { opacity: 1; }
+
+    /* two-col row */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    /* ── TEAM PICKER ── */
+    .team-section { margin-top: 24px; }
+    .team-label {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 16px;
+      font-family: 'Orbitron', sans-serif; font-size: .52rem;
+      color: var(--cyan); letter-spacing: 4px; opacity: .8;
+    }
+    .team-label::before, .team-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .team-card {
+      cursor: pointer; position: relative; overflow: hidden;
+      background: #000d1a;
+      border: 1px solid var(--border-dim);
+      padding: 22px 12px 18px;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      transition: border-color .2s, background .2s;
+      user-select: none; -webkit-tap-highlight-color: transparent;
+    }
+    .team-card:hover  { border-color: var(--border); background: rgba(0,229,255,.04); }
+    .team-card.selected { border-color: var(--cyan); background: rgba(0,229,255,.06); }
+
+    .card-tick {
+      position: absolute; top: 8px; right: 10px;
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 1px solid var(--cyan); background: rgba(0,229,255,.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .6rem; color: var(--cyan); opacity: 0; transition: opacity .2s;
+    }
+    .team-card.selected .card-tick { opacity: 1; }
+
+    .team-logo-wrap {
+      width: 72px; height: 72px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; border: 1px solid var(--border);
+      background: #010a12; flex-shrink: 0;
+      transition: border-color .2s;
+    }
+    .team-card.selected .team-logo-wrap { border-color: var(--cyan); }
+    .team-logo-wrap img { width: 100%; height: 100%; object-fit: contain; }
+    .team-logo-wrap .fallback { font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; color: var(--cyan); display: none; }
+    .team-logo-wrap img.error { display: none; }
+    .team-logo-wrap img.error + .fallback { display: block; }
+
+    .team-full-name { font-family: 'Orbitron', sans-serif; font-size: .58rem; letter-spacing: 1.5px; color: #fff; text-align: center; line-height: 1.4; }
+    .team-abbr-tag  { font-family: 'Orbitron', sans-serif; font-size: .45rem; letter-spacing: 3px; color: var(--cyan); opacity: .65; }
+
+    .team-err { font-size: .58rem; letter-spacing: 1px; color: var(--danger); opacity: 0; transition: opacity .15s; text-align: center; margin-top: 8px; }
+    .team-err.show { opacity: 1; }
+
+    /* ── SUBMIT ── */
+    .submit-wrap { margin-top: 28px; }
+    .submit-divider { width: 100%; height: 1px; margin-bottom: 24px; background: linear-gradient(90deg, transparent, var(--border), transparent); }
+    .btn-submit {
+      display: block; width: 100%; padding: 16px;
+      color: var(--cyan); font-family: 'Orbitron', sans-serif;
+      font-weight: bold; letter-spacing: 4px; font-size: .72rem;
+      text-transform: uppercase;
+      border: 1px solid var(--cyan); background: rgba(0,229,255,.05);
+      cursor: pointer; transition: background .2s, color .2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-submit:hover  { background: var(--cyan); color: #000; }
+    .btn-submit:active { background: var(--cyan); color: #000; transform: scale(.98); }
+    .btn-submit:disabled { opacity: .4; cursor: not-allowed; pointer-events: none; }
+    .privacy-note { text-align: center; margin-top: 10px; font-size: .55rem; letter-spacing: 1px; color: rgba(255,255,255,.2); }
+
+    /* ── CLOSED BANNER ── */
+    .closed-banner {
+      text-align: center; padding: 14px 18px; margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--cyan);
+      background: var(--cyan-faint);
+      font-family: 'Orbitron', sans-serif; font-size: .5rem;
+      letter-spacing: 4px; color: var(--cyan);
+      display: none;
+    }
+    .closed-banner.show { display: block; }
+
+    /* ── SUCCESS ── */
+    .success-overlay {
+      position: absolute; inset: 0;
+      background: #00090f;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 16px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .4s; z-index: 20;
+      text-align: center; padding: 36px 24px;
+    }
+    .success-overlay.show { opacity: 1; pointer-events: auto; }
+    .success-icon { font-size: 2.4rem; }
+    .success-title { font-family: 'Orbitron', sans-serif; font-size: 1rem; letter-spacing: 5px; color: var(--cyan); }
+    .success-msg   { font-size: .88rem; color: var(--muted); letter-spacing: .5px; line-height: 1.7; }
+    .success-team-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 12px 22px; color: var(--cyan);
+      font-family: 'Orbitron', sans-serif; font-size: .62rem; letter-spacing: 3px;
+      border: 1px solid var(--cyan); background: var(--cyan-faint);
+    }
+    .success-team-badge img { width: 28px; height: 28px; object-fit: contain; }
+
+    /* ── FOOTER ── */
+    footer { margin-top: 36px; text-align: center; font-family: 'Orbitron', sans-serif; font-size: .4rem; letter-spacing: 5px; color: rgba(255,255,255,.15); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 520px) {
+      .page-wrap  { padding: 36px var(--pad) 56px; }
+      .card-body  { padding: 24px 16px 28px; }
+      .field-row  { grid-template-columns: 1fr; }
+      .team-logo-wrap { width: 58px; height: 58px; }
+      .team-full-name { font-size: .52rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-brand-sub">⚓ &nbsp;IN ASSOCIATION WITH</div>
+    <div class="nav-brand-main">ANCHORAGE 2026</div>
+  </div>
+  <a href="index.html" class="nav-back">← BACK</a>
+</nav>
+
+<div class="page-wrap">
+
+  <header class="page-header">
+    <div class="hdr-badge">
+      <div class="hdr-badge-line"></div>
+      <div class="hdr-badge-text">DEPT. OF SHIP TECHNOLOGY · PRESENTS</div>
+      <div class="hdr-badge-line"></div>
+    </div>
+    <span class="hdr-tagline">IPL PREDICTION CONTEST</span>
+    <h1 class="hdr-main-title">FINAL <span>2026</span></h1>
+    <div class="hdr-line"></div>
+  </header>
+
+  <div class="form-card" id="formCard">
+    <div class="card-topbar"></div>
+    <div class="card-corner tl"></div><div class="card-corner tr"></div>
+    <div class="card-corner bl"></div><div class="card-corner br"></div>
+
+    <!-- SUCCESS STATE -->
+    <div class="success-overlay" id="successOverlay">
+      <div class="success-icon">🏆</div>
+      <div class="success-title">PREDICTION LOCKED</div>
+      <p class="success-msg">You're officially in the contest.<br>May your team lift the trophy!</p>
+      <div class="success-team-badge" id="successBadge">
+        <img id="successLogo" src="" alt=""/>
+        <span id="successTeamName">YOUR TEAM</span>
+      </div>
+      <p class="success-msg" style="font-size:.7rem;margin-top:4px;">Check the leaderboard at the event.</p>
+    </div>
+
+    <div class="card-body">
+      <form id="regForm" novalidate>
+
+        <!-- Personal Details -->
+        <div class="sec-label">
+          <div class="sec-label-line"></div>
+          <div class="sec-label-text">Personal Details</div>
+          <div class="sec-label-line"></div>
+        </div>
+
+        <div class="field" id="f-name">
+          <label for="name">Name</label>
+          <input type="text" id="name" placeholder="Your name" autocomplete="name"/>
+          <span class="err-msg">Name is required</span>
+        </div>
+
+        <div class="field" id="f-email">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="you@email.com" autocomplete="email"/>
+          <span class="err-msg">Valid email required</span>
+        </div>
+
+        <div class="field-row">
+          <div class="field" id="f-phone">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" placeholder="+91 98765 43210" autocomplete="tel"/>
+            <span class="err-msg">Required</span>
+          </div>
+          <div class="field" id="f-year">
+            <label for="year">Year of Study</label>
+            <select id="year">
+              <option value="">Select</option>
+              <option>1st Year</option>
+              <option>2nd Year</option>
+              <option>3rd Year</option>
+              <option>4th Year</option>
+              <option>PG / PhD</option>
+              <option>Faculty</option>
+              <option>Other</option>
+            </select>
+            <span class="err-msg">Select one</span>
+          </div>
+        </div>
+
+        <div class="field" id="f-dept">
+          <label for="dept">Department / Branch</label>
+          <input type="text" id="dept" placeholder="e.g. Naval Architecture, Mechanical…"/>
+          <span class="err-msg">Required</span>
+        </div>
+
+        <!-- Team Picker -->
+        <div class="team-section">
+          <div class="team-label">Who will win the IPL Final?</div>
+          <div class="team-grid" id="teamGrid"></div>
+          <div class="team-err" id="teamErr">Please pick a team</div>
+        </div>
+
+        <!-- Hidden: always sends "team1" or "team2" to backend -->
+        <input type="hidden" id="selectedTeamKey" name="team"/>
+
+        <!-- Submit -->
+        <div class="submit-wrap" id="submitWrap">
+          <div class="closed-banner" id="closedBanner">◈ &nbsp; PREDICTIONS CLOSED · 31 MAY 2026 · 6 PM IST &nbsp; ◈</div>
+          <div class="submit-divider"></div>
+          <button type="submit" class="btn-submit" id="submitBtn">Lock In My Prediction →</button>
+          <p class="privacy-note">Your details are used only for this contest &nbsp;·&nbsp; No spam, ever.</p>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <footer>⚓ &nbsp; ANCHORAGE 2026 &nbsp;·&nbsp; DEPT. OF SHIP TECHNOLOGY &nbsp;·&nbsp; IPL FINAL PREDICTION</footer>
+</div>
+
+<script>
+/* ================================================================
+   TEAM CONFIG — read from CSS variables so the single source
+   of truth stays at the top of this file.
+   Backend always receives selectedTeamKey = "team1" or "team2".
+================================================================ */
+const style = getComputedStyle(document.documentElement);
+function cssVar(name) {
+  return style.getPropertyValue(name).trim().replace(/^["']|["']$/g, '');
+}
+
+const TEAMS = [
+  {
+    key:  'team1',
+    name: cssVar('--team1-name'),
+    abbr: cssVar('--team1-abbr'),
+    logo: cssVar('--team1-logo'),
+  },
+  {
+    key:  'team2',
+    name: cssVar('--team2-name'),
+    abbr: cssVar('--team2-abbr'),
+    logo: cssVar('--team2-logo'),
+  },
+];
+
+/* ── Build team cards ── */
+let selectedTeam = null;
+const grid = document.getElementById('teamGrid');
+
+TEAMS.forEach(t => {
+  const card = document.createElement('div');
+  card.className = 'team-card';
+  card.innerHTML = `
+    <div class="card-tick">✓</div>
+    <div class="team-logo-wrap">
+      <img src="${t.logo}" alt="${t.name}" onerror="this.classList.add('error')"/>
+      <span class="fallback">${t.abbr}</span>
+    </div>
+    <div class="team-full-name">${t.name}</div>
+    <div class="team-abbr-tag">${t.abbr}</div>
+  `;
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.team-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedTeam = t;
+    document.getElementById('selectedTeamKey').value = t.key; // "team1" or "team2"
+    document.getElementById('teamErr').classList.remove('show');
+  });
+  grid.appendChild(card);
+});
+
+/* ── Deadline lock ── */
+(function checkDeadline() {
+  const DEADLINE_UTC = new Date('2026-05-31T12:30:00Z'); // 6 PM IST
+
+  function lockForm() {
+    const btn = document.getElementById('submitBtn');
+    if (!btn) return;
+    btn.disabled = true;
+    btn.textContent = '⚓  CONTEST CLOSED';
+    document.getElementById('closedBanner').classList.add('show');
+    document.querySelectorAll('.team-card').forEach(c => {
+      c.style.pointerEvents = 'none';
+      c.style.opacity = '0.45';
+    });
+  }
+
+  const now = new Date();
+  if (now >= DEADLINE_UTC) {
+    lockForm();
+  } else {
+    setTimeout(lockForm, DEADLINE_UTC - now);
+  }
+})();
+
+/* ── Validation helpers ── */
+const notEmpty = v => v.trim().length > 0;
+const isEmail  = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+
+function validateField(id, fn) {
+  const wrap = document.getElementById('f-' + id);
+  const ok   = fn(document.getElementById(id).value);
+  if (wrap) wrap.classList.toggle('err', !ok);
+  return ok;
+}
+
+/* ── Submit ── */
+document.getElementById('regForm').addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const valid = [
+    validateField('name',  notEmpty),
+    validateField('email', isEmail),
+    validateField('phone', notEmpty),
+    validateField('year',  notEmpty),
+    validateField('dept',  notEmpty),
+  ].every(Boolean);
+
+  if (!selectedTeam) document.getElementById('teamErr').classList.add('show');
+  if (!valid || !selectedTeam) return;
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Locking In…';
+
+  const payload = {
+    name:  document.getElementById('name').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    phone: document.getElementById('phone').value.trim(),
+    year:  document.getElementById('year').value,
+    dept:  document.getElementById('dept').value.trim(),
+    team:  selectedTeam.key,            // always "team1" or "team2"
+    team_display_name: selectedTeam.name, // optional extra for receipts
+  };
+
+  try {
+    const res = await fetch('/api/ipl/register', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      document.getElementById('successLogo').src           = selectedTeam.logo;
+      document.getElementById('successTeamName').textContent = selectedTeam.name;
+      document.getElementById('successOverlay').classList.add('show');
+    } else {
+      alert(data.message || 'Something went wrong. Please try again.');
+      btn.disabled = false;
+      btn.textContent = 'Lock In My Prediction →';
+    }
+  } catch (err) {
+    alert('Network error — please check your connection and try again.');
+    btn.disabled = false;
+    btn.textContent = 'Lock In My Prediction →';
+  }
+});
+</script>
+</body>
+</html>
