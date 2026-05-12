@@ -1,42 +1,37 @@
 """
 app.py — Flask backend for Anchorage 2026 IPL Prediction Contest
-Run:
-    flask run          (development)
-    gunicorn app:app   (production)
+Deployment: Render.com
+Run locally:  flask run
+Run on Render: gunicorn app:app
 """
 
-import os
 import re
 import logging
 from datetime import datetime, timezone
 
 import pymysql
 import pymysql.cursors
-from dotenv import load_dotenv
 from flask import Flask, request, jsonify, g
 from flask_cors import CORS
 
-# ── Load .env ────────────────────────────────────────────────────────────────
-load_dotenv()
-
 # ── App setup ────────────────────────────────────────────────────────────────
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "*"}})   # tighten in production
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-# ── Config ───────────────────────────────────────────────────────────────────
+# ── Database config ───────────────────────────────────────────────────────────
 DB_CONFIG = {
-    "host":     os.environ.get("DATABASE_HOST",     "localhost"),
-    "port":     int(os.environ.get("DATABASE_PORT", 3306)),
-    "user":     os.environ.get("DATABASE_USER",     "root"),
-    "password": os.environ.get("DATABASE_PASSWORD", ""),
-    "database": os.environ.get("DATABASE_NAME",     "anchorage_ipl"),
+    "host":        "yamabiko.proxy.rlwy.net",
+    "port":        28286,
+    "user":        "root",
+    "password":    "GAwExjueEjqyWMnhYaDFgIqxZzwPHObU",
+    "database":    "anchorage_ipl",
     "cursorclass": pymysql.cursors.DictCursor,
-    "autocommit": False,
+    "autocommit":  False,
+    "connect_timeout": 10,
 }
 
-CONTEST_DEADLINE = datetime.fromisoformat(
-    os.environ.get("DEADLINE_UTC", "2026-05-31T12:30:00+00:00")
-).replace(tzinfo=timezone.utc)
+# ── Contest deadline: 31 May 2026, 6 PM IST (= 12:30 UTC) ───────────────────
+CONTEST_DEADLINE = datetime(2026, 5, 31, 12, 30, 0, tzinfo=timezone.utc)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -95,11 +90,6 @@ def validate_payload(data: dict) -> list:
 # ── Routes ────────────────────────────────────────────────────────────────────
 @app.route("/api/ipl/register", methods=["POST"])
 def register():
-    """
-    POST /api/ipl/register
-    Body (JSON):
-        name, email, phone, year, dept, team ("team1" | "team2")
-    """
     # 1. Deadline check
     now = datetime.now(tz=timezone.utc)
     if now >= CONTEST_DEADLINE:
@@ -148,7 +138,6 @@ def register():
 
 @app.route("/api/ipl/results", methods=["GET"])
 def results():
-    """GET /api/ipl/results — vote counts per team."""
     db = get_db()
     with db.cursor() as cursor:
         cursor.execute("SELECT team, COUNT(*) AS votes FROM registrations GROUP BY team")
@@ -158,7 +147,6 @@ def results():
 
 @app.route("/api/ipl/entries", methods=["GET"])
 def entries():
-    """GET /api/ipl/entries — all registrations. ADMIN USE ONLY."""
     db = get_db()
     with db.cursor() as cursor:
         cursor.execute(
@@ -170,9 +158,17 @@ def entries():
 
 @app.route("/health", methods=["GET"])
 def health():
-    return jsonify(status="ok"), 200
+    """Render pings this to check if the service is alive."""
+    try:
+        db = get_db()
+        with db.cursor() as cursor:
+            cursor.execute("SELECT 1")
+        return jsonify(status="ok", db="connected"), 200
+    except Exception as e:
+        logger.error("Health check failed: %s", e)
+        return jsonify(status="error", db="disconnected"), 500
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=False, host="0.0.0.0", port=5000)
